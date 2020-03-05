@@ -20,9 +20,15 @@ BipDevice::BipDevice(const QString &pairedName, QObject *parent) : AbstractDevic
 }
 
 
-bool BipDevice::supportsFeature(Feature f)
+int BipDevice::supportedFeatures()
 {
-    return true;
+    return FEATURE_HRM |
+            FEATURE_WEATHER |
+            FEATURE_ACTIVITY |
+            FEATURE_STEPS |
+            FEATURE_ALARMS |
+            FEATURE_ALERT |
+            FEATURE_NOTIFIATION;
 }
 
 QString BipDevice::deviceType()
@@ -75,7 +81,7 @@ void BipDevice::parseServices()
             } else if (uuid == UUID_SERVICE_MIBAND && !service(UUID_SERVICE_MIBAND)) {
                 addService(UUID_SERVICE_MIBAND, new MiBandService(path, this));
             } else if (uuid == UUID_SERVICE_MIBAND2 && !service(UUID_SERVICE_MIBAND2)) {
-                addService(UUID_SERVICE_MIBAND2, new MiBand2Service(path, 0x08, false, this));
+                addService(UUID_SERVICE_MIBAND2, new MiBand2Service(path, 0x08, 0x00, false, this));
             } else if (uuid == UUID_SERVICE_FIRMWARE && !service(UUID_SERVICE_FIRMWARE)) {
                 addService(UUID_SERVICE_FIRMWARE, new BipFirmwareService(path, this));
             } else if ( !service(uuid)) {
@@ -167,8 +173,8 @@ void BipDevice::authenticated(bool ready)
             mi->setEnableDisplayOnLiftWrist();
             mi->setRotateWristToSwitchInfo(true);
             mi->setInactivityWarnings();
-            mi->setAlarms();
             mi->setDisconnectNotification();
+            mi->requestAlarms();
         }
 
         HRMService *hrm = qobject_cast<HRMService*>(service(UUID_SERVICE_HRM));
@@ -236,7 +242,7 @@ void BipDevice::initialise()
 
     MiBand2Service *mi2 = qobject_cast<MiBand2Service*>(service(UUID_SERVICE_MIBAND2));
     if (mi2) {
-        qDebug() << "Got mi2 service";
+        qDebug() << "Got mi2 service" << m_pairing << m_needsAuth;
         connect(mi2, &MiBand2Service::authenticated, this, &BipDevice::authenticated, Qt::UniqueConnection);
         connect(mi2, &QBLEService::operationRunningChanged, this, &QBLEDevice::operationRunningChanged, Qt::UniqueConnection);
 

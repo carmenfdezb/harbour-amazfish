@@ -18,6 +18,8 @@ LIBS += -Lqble/qble
 QT +=  contacts positioning KDb3
 
 PKGCONFIG += mlite5
+PKGCONFIG += libmkcal-qt5 libkcalcoren-qt5
+INCLUDEPATH += /usr/include/mkcal-qt5 /usr/include/kcalcoren-qt5
 
 INCLUDEPATH += $$PWD/src/services/ \
                $$PWD/src/operations/ \
@@ -29,14 +31,21 @@ target.path = /usr/bin/
 systemd_services.path = /usr/lib/systemd/user/
 systemd_services.files = harbour-amazfish.service
 
+privilege.files = $${TARGET}.privileges
+privilege.path = /usr/share/mapplauncherd/privileges.d/
+
 INSTALLS += target \
-            systemd_services
+            systemd_services \
+            privilege
 
 
 include(../qble/qble.pri)
 
 SOURCES += \
+    src/calendarreader.cpp \
     src/devices/abstractfirmwareinfo.cpp \
+    src/devices/biplitedevice.cpp \
+    src/devices/biplitefirmwareinfo.cpp \
     src/devices/gtsdevice.cpp \
     src/devices/gtsfirmwareinfo.cpp \
     src/qaesencryption.cpp \
@@ -77,12 +86,16 @@ SOURCES += \
     src/weather/huamiweathercondition.cpp
 
 DISTFILES += \
-    harbour-amazfish.service
+    harbour-amazfish.service \
+    harbour-amazfishd.privileges
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
 HEADERS += \
+    src/calendarreader.h \
     src/devices/abstractfirmwareinfo.h \
+    src/devices/biplitedevice.h \
+    src/devices/biplitefirmwareinfo.h \
     src/devices/gtsdevice.h \
     src/devices/gtsfirmwareinfo.h \
     src/qaesencryption.h \

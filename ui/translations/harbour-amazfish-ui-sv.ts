@@ -94,7 +94,7 @@
     </message>
     <message>
         <source>File not supported on this device</source>
-        <translation type="unfinished"></translation>
+        <translation>Filformatet stöds inte på denna enhet</translation>
     </message>
 </context>
 <context>
@@ -163,12 +163,24 @@
         <source>S:</source>
         <translation>S:</translation>
     </message>
+    <message>
+        <source>Update Calendar</source>
+        <translation>Uppdatera kalender</translation>
+    </message>
+    <message>
+        <source>Informations</source>
+        <translation>Information</translation>
+    </message>
+    <message>
+        <source>function tests</source>
+        <translation>Funktionstest</translation>
+    </message>
 </context>
 <context>
     <name>FirstPage</name>
     <message>
         <source>Pair with watch</source>
-        <translation>Para ihop med klocka</translation>
+        <translation>Parkoppla klocka</translation>
     </message>
     <message>
         <source>Download File</source>
@@ -187,16 +199,24 @@
         <translation>Anslut till klocka</translation>
     </message>
     <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
-    </message>
-    <message>
         <source>Start Service</source>
-        <translation>Strata tjänsten</translation>
+        <translation>Starta tjänsten</translation>
     </message>
     <message>
         <source>Enable Service</source>
         <translation>Aktivera tjänsten</translation>
+    </message>
+    <message>
+        <source>Amazfish</source>
+        <translation>Amazfish</translation>
+    </message>
+    <message>
+        <source>Goal: </source>
+        <translation>Mål: </translation>
+    </message>
+    <message>
+        <source> Steps</source>
+        <translation> Steg</translation>
     </message>
 </context>
 <context>
@@ -218,34 +238,50 @@
     </message>
     <message>
         <source>Pull down to start scan</source>
-        <translation type="unfinished"></translation>
+        <translation>Dra neråt för att starta skanning</translation>
     </message>
     <message>
         <source>Pair Device</source>
-        <translation type="unfinished"></translation>
+        <translation>Parkoppla enhet</translation>
     </message>
     <message>
         <source>Save Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Spara nyckel</translation>
     </message>
 </context>
 <context>
     <name>PairSelectDeviceType</name>
     <message>
         <source>Select Device Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfit Bip</source>
-        <translation type="unfinished"></translation>
+        <translation>Välj enhetstyp</translation>
     </message>
     <message>
         <source>Amazfit GTS</source>
-        <translation type="unfinished"></translation>
+        <translation>Amazfit GTS</translation>
+    </message>
+    <message>
+        <source>Amazfit Bip Lite</source>
+        <translation>Amazfit Bip Lite</translation>
+    </message>
+    <message>
+        <source>Amazfit Bip Watch</source>
+        <translation>Amazfit Bip Watch</translation>
+    </message>
+    <message>
+        <source>Amazfit Cor</source>
+        <translation>Amazfit Cor</translation>
+    </message>
+    <message>
+        <source>Mi Band 3</source>
+        <translation>Mi Band 3</translation>
     </message>
     <message>
         <source>MI Band 2</source>
-        <translation type="unfinished"></translation>
+        <translation>MI Band 2</translation>
+    </message>
+    <message>
+        <source>Mi Smart Band 4</source>
+        <translation>Mi Smart Band 4</translation>
     </message>
 </context>
 <context>
@@ -308,6 +344,34 @@
     <message>
         <source>Low battery notification</source>
         <translation>Avisering för låg batterinivå</translation>
+    </message>
+    <message>
+        <source>Refresh calendar every (</source>
+        <translation>Uppdatera kalendern varje (</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation>Aviseringar</translation>
+    </message>
+    <message>
+        <source>Refresh rates</source>
+        <translation>Uppdateringsintervall</translation>
+    </message>
+    <message>
+        <source>Start service on boot</source>
+        <translation>Starta tjänsten vid systemstart</translation>
+    </message>
+    <message>
+        <source>Start/Stop the Amazfish Background Service</source>
+        <translation>Starta/Stoppa Amazfish bakgrundstjänst</translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation>Starta</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation>Stoppa</translation>
     </message>
 </context>
 <context>
@@ -487,22 +551,6 @@
         <translation>Väder</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation>Starta tjänsten</translation>
-    </message>
-    <message>
-        <source>Stop Service</source>
-        <translation>Stoppa tjänsten</translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation>Aktivera tjänsten</translation>
-    </message>
-    <message>
-        <source>Disable Service</source>
-        <translation>Avaktivera tjänsten</translation>
-    </message>
-    <message>
         <source>Debug Info</source>
         <translation>Felsökningsinfo</translation>
     </message>
@@ -577,6 +625,18 @@
         <source>Save Profile</source>
         <translation>Spara profil</translation>
     </message>
+    <message>
+        <source>Personal data</source>
+        <translation>Personlig data</translation>
+    </message>
+    <message>
+        <source>Personal preferences</source>
+        <translation>Personliga inställningar</translation>
+    </message>
+    <message>
+        <source>Heartrate usage</source>
+        <translation>Hjärtfrekvensanvändning</translation>
+    </message>
 </context>
 <context>
     <name>SleepPage</name>
@@ -599,6 +659,10 @@
     <message>
         <source>hrs (deep)</source>
         <translation>tim (djup)</translation>
+    </message>
+    <message>
+        <source>Note: last nights sleep is updated at mid-day</source>
+        <translation>Notis: Senaste nattens sömn uppdateras mitt på dagen</translation>
     </message>
 </context>
 <context>

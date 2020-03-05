@@ -1,42 +1,20 @@
-#include "gtsdevice.h"
-#include "gtsfirmwareinfo.h"
+#include "biplitedevice.h"
+#include "biplitefirmwareinfo.h"
 #include <QtXml/QtXml>
-#include <QDateTime>
-#include "typeconversion.h"
 
-GtsDevice::GtsDevice(const QString &pairedName, QObject *parent) : BipDevice(pairedName, parent)
+BipLiteDevice::BipLiteDevice(const QString &pairedName, QObject *parent) : BipDevice(pairedName, parent)
 {
-    qDebug() << "Creating GTS Device";
+    qDebug() << "Creating Bip Lite Device";
 }
 
-QString GtsDevice::deviceType()
+QString BipLiteDevice::deviceType()
 {
-    return "amazfitgts";
+    return "amazfitbiplite";
 }
 
-int GtsDevice::supportedFeatures()
+void BipLiteDevice::onPropertiesChanged(QString interface, QVariantMap map, QStringList list)
 {
-    return FEATURE_HRM |
-            FEATURE_WEATHER |
-            FEATURE_ACTIVITY |
-            FEATURE_STEPS |
-            FEATURE_ALARMS |
-            FEATURE_ALERT |
-            FEATURE_NOTIFIATION |
-            FEATURE_EVENT_REMINDER;
-}
-
-void GtsDevice::sendAlert(const QString &sender, const QString &subject, const QString &message)
-{
-    MiBandService *mi = qobject_cast<MiBandService*>(service(UUID_SERVICE_MIBAND));
-    if (mi) {
-        mi->sendAlert(sender, subject, message);
-    }
-}
-
-void GtsDevice::onPropertiesChanged(QString interface, QVariantMap map, QStringList list)
-{
-    qDebug() << "GtsDevice::onPropertiesChanged:" << interface << map << list;
+    qDebug() << "BipLiteDevice::onPropertiesChanged:" << interface << map << list;
 
     if (interface == "org.bluez.Device1") {
         m_reconnectTimer->start();
@@ -66,7 +44,7 @@ void GtsDevice::onPropertiesChanged(QString interface, QVariantMap map, QStringL
 
 }
 
-void GtsDevice::initialise()
+void BipLiteDevice::initialise()
 {
     setConnectionState("connected");
     parseServices();
@@ -80,7 +58,7 @@ void GtsDevice::initialise()
 
         connect(mi, &MiBandService::message, this, &BipDevice::message, Qt::UniqueConnection);
         connect(mi, &QBLEService::operationRunningChanged, this, &QBLEDevice::operationRunningChanged, Qt::UniqueConnection);
-        connect(mi, &MiBandService::buttonPressed, this, &GtsDevice::handleButtonPressed, Qt::UniqueConnection);
+        connect(mi, &MiBandService::buttonPressed, this, &BipLiteDevice::handleButtonPressed, Qt::UniqueConnection);
         connect(mi, &MiBandService::informationChanged, this, &BipDevice::informationChanged, Qt::UniqueConnection);
     }
 
@@ -113,9 +91,9 @@ void GtsDevice::initialise()
 }
 
 
-void GtsDevice::parseServices()
+void BipLiteDevice::parseServices()
 {
-    qDebug() << "GtsDevice::parseServices";
+    qDebug() << "BipLiteDevice::parseServices";
 
     QDBusInterface adapterIntro("org.bluez", devicePath(), "org.freedesktop.DBus.Introspectable", QDBusConnection::systemBus(), 0);
     QDBusReply<QString> xml = adapterIntro.call("Introspect");
@@ -163,41 +141,7 @@ void GtsDevice::parseServices()
     }
 }
 
-AbstractFirmwareInfo *GtsDevice::firmwareInfo(const QByteArray &bytes)
+AbstractFirmwareInfo *BipLiteDevice::firmwareInfo(const QByteArray &bytes)
 {
-    return new GtsFirmwareInfo(bytes);
-}
-
-void GtsDevice::sendEventReminder(int id, const QDateTime &dt, const QString &event)
-{
-    //Send event reminder
-    //Type: 02
-    //00 0b Always 0b
-    //01 01 ID
-    //02 09 Flags 0x01 = Enable, 0x04 = End Date Preset, 0x08 = Text Present
-    //03 00
-    //04 00
-    //05 00
-    //06 Date/Time (6)
-    //00
-    //MESSAGE
-    qDebug() << dt << event;
-
-    QByteArray cmd;
-    cmd += (char)0x0b;
-    cmd += (char)id;
-    cmd += (char)0x09;
-    cmd += (char)0x00;
-    cmd += (char)0x00;
-    cmd += (char)0x00;
-    cmd += TypeConversion::dateTimeToBytes(dt, 0).left(5);
-    cmd += (char)0x00;
-    cmd += (char)0x00;
-    cmd += event.toLocal8Bit();
-    cmd += (char)0x00;
-
-    MiBandService *mi = qobject_cast<MiBandService*>(service(UUID_SERVICE_MIBAND));
-    if (mi) {
-        mi->writeChunked(MiBandService::UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER, 2, cmd);
-    }
+    return new BipLiteFirmwareInfo(bytes);
 }

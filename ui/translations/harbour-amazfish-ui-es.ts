@@ -163,6 +163,18 @@
         <source>S:</source>
         <translation>S:</translation>
     </message>
+    <message>
+        <source>Update Calendar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>function tests</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FirstPage</name>
@@ -187,10 +199,6 @@
         <translation>Conectar reloj</translation>
     </message>
     <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
-    </message>
-    <message>
         <source>Start Service</source>
         <translation>Iniciar servicio</translation>
     </message>
@@ -198,12 +206,24 @@
         <source>Enable Service</source>
         <translation>Habilitar servicio</translation>
     </message>
+    <message>
+        <source>Amazfish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Goal: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Steps</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GraphData</name>
     <message>
         <source>No data</source>
-        <translation>No hay datos</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -236,16 +256,32 @@
         <translation>Selecciona tipo de dispositivo</translation>
     </message>
     <message>
-        <source>Amazfit Bip</source>
-        <translation>Amazfit Bip</translation>
-    </message>
-    <message>
         <source>Amazfit GTS</source>
         <translation>Amazfit GTS</translation>
     </message>
     <message>
+        <source>Amazfit Bip Lite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfit Bip Watch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfit Cor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi Band 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>MI Band 2</source>
-        <translation>MI Band 2</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi Smart Band 4</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -308,6 +344,34 @@
     <message>
         <source>Low battery notification</source>
         <translation>Notificación de batería baja</translation>
+    </message>
+    <message>
+        <source>Refresh calendar every (</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh rates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start service on boot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop the Amazfish Background Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -487,22 +551,6 @@
         <translation>Tiempo</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation>Iniciar servicio</translation>
-    </message>
-    <message>
-        <source>Stop Service</source>
-        <translation>Detener servicio</translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation>Habilitar servicio</translation>
-    </message>
-    <message>
-        <source>Disable Service</source>
-        <translation>Deshabilitar servicio</translation>
-    </message>
-    <message>
         <source>Debug Info</source>
         <translation>Info depuración</translation>
     </message>
@@ -577,6 +625,18 @@
         <source>Save Profile</source>
         <translation>Guardar perfil</translation>
     </message>
+    <message>
+        <source>Personal data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Personal preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heartrate usage</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SleepPage</name>
@@ -599,6 +659,10 @@
     <message>
         <source>hrs (deep)</source>
         <translation>hrs (profundo)</translation>
+    </message>
+    <message>
+        <source>Note: last nights sleep is updated at mid-day</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

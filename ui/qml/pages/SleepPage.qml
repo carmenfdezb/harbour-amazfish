@@ -94,6 +94,7 @@ Page {
                 graphTitle: qsTr("Sleep Summary")
                 graphHeight: 300
 
+                axisX.mask: "MM/dd"
                 axisY.units: "Hours"
                 type: DataSource.SleepSummary
                 graphType: 2
@@ -106,6 +107,16 @@ Page {
                 onClicked: {
                     updateGraph(day);
                 }
+            }
+            Label {
+                id: lblUpdate
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: Theme.highlightColor
+                font.pixelSize: Theme.fontSizeExtraSmall
+                height: Theme.iconSizeMedium
+                verticalAlignment: Text.AlignVCenter
+                width: parent.width
+                text: qsTr("Note: last nights sleep is updated at mid-day")
             }
         }
     }

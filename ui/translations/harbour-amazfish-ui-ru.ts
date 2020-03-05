@@ -163,6 +163,18 @@
         <source>S:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Update Calendar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>function tests</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FirstPage</name>
@@ -187,15 +199,23 @@
         <translation>Подключить часы</translation>
     </message>
     <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
-    </message>
-    <message>
         <source>Start Service</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Enable Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfish</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Goal: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> Steps</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -236,15 +256,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Amazfit Bip</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Amazfit GTS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Amazfit Bip Lite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfit Bip Watch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfit Cor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi Band 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>MI Band 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mi Smart Band 4</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -307,6 +343,34 @@
     </message>
     <message>
         <source>Low battery notification</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh calendar every (</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Refresh rates</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start service on boot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start/Stop the Amazfish Background Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -487,22 +551,6 @@
         <translation>Погода</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stop Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Disable Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Debug Info</source>
         <translation type="unfinished"></translation>
     </message>
@@ -577,6 +625,18 @@
         <source>Save Profile</source>
         <translation>Сохранить профиль</translation>
     </message>
+    <message>
+        <source>Personal data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Personal preferences</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heartrate usage</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SleepPage</name>
@@ -599,6 +659,10 @@
     <message>
         <source>hrs (deep)</source>
         <translation>часов (глубокий сон)</translation>
+    </message>
+    <message>
+        <source>Note: last nights sleep is updated at mid-day</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

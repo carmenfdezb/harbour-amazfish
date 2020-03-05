@@ -97,8 +97,8 @@ Page {
                 label: qsTr("Time Format")
 
                 menu: ContextMenu {
-                    MenuItem { text: qsTr("12hr") }
                     MenuItem { text: qsTr("24hr") }
+                    MenuItem { text: qsTr("12hr") }
                 }
             }
 
@@ -125,6 +125,12 @@ Page {
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("Settings-bip-shortcuts.qml"))
                 }
+            }
+
+            Separator {
+                width: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                color: Theme.highlightColor
             }
 
             Button {

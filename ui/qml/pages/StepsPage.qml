@@ -86,6 +86,7 @@ Page {
                 graphTitle: qsTr("Steps")
                 graphHeight: 300
 
+                axisX.mask: "MM/dd"
                 axisY.units: "Steps"
                 type: DataSource.StepSummary
                 graphType: 2
@@ -116,7 +117,7 @@ Page {
 
     Component.onCompleted: {
         updateGraphs();
-        stepCount = DaemonInterfaceInstance.information(DaemonInterface.INFO_STEPS) + 0;
+        stepCount = parseInt(DaemonInterfaceInstance.information(DaemonInterface.INFO_STEPS), 10) || 0;
     }
 
 
@@ -128,10 +129,8 @@ Page {
             }
         }
         onInformationChanged: {
-            switch (infoKey) {
-            case DaemonInterface.INFO_STEPS:
-                stepCount = infoValue
-                break;
+            if (infoKey === DaemonInterface.INFO_STEPS) {
+                stepCount = parseInt(infoValue, 10) || 0;
             }
         }
     }

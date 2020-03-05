@@ -22,6 +22,7 @@
 #include "dbushrm.h"
 #include "weather/citymanager.h"
 #include "weather/currentweather.h"
+#include "calendarreader.h"
 
 class AlertNotificationService;
 class DeviceInfoService;
@@ -54,6 +55,8 @@ public:
     Q_INVOKABLE void disconnect();
     Q_INVOKABLE QString connectionState() const;
     Q_INVOKABLE bool operationRunning();
+    Q_INVOKABLE bool supportsFeature(int f);
+    Q_INVOKABLE int supportedFeatures();
 
     KDbConnection *dbConnection();
 
@@ -76,6 +79,7 @@ public:
     Q_INVOKABLE void applyDeviceSetting(int s);
     Q_INVOKABLE void requestManualHeartrate();
     Q_INVOKABLE void triggerSendWeather();
+    Q_INVOKABLE void updateCalendar();
 
 private:
     QString m_deviceAddress;
@@ -110,6 +114,10 @@ private:
     Q_SLOT void slot_informationChanged(AbstractDevice::Info infokey, const QString &infovalue);
     void sendBufferedNotifications();
 
+    //Calendar
+    CalendarReader m_calendarReader;
+
+    //Notifications
     QQueue<WatchNotification> m_notificationBuffer;
 
     //Database

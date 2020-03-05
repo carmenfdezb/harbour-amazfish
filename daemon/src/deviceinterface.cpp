@@ -53,6 +53,11 @@ DeviceInterface::DeviceInterface()
     if (m_cityManager.cities().count() > 0) {
         m_currentWeather.setCity(qobject_cast<City*>(m_cityManager.cities()[0]));
     }
+
+    //Calendar
+
+    updateCalendar();
+
     //Refresh timer
     m_refreshTimer = new QTimer();
     connect(m_refreshTimer, &QTimer::timeout, this, &DeviceInterface::onRefreshTimer);
@@ -104,7 +109,7 @@ QString DeviceInterface::pair(const QString &name, const QString &address)
         connect(m_device, &QBLEDevice::operationRunningChanged, this, &DeviceInterface::operationRunningChanged);
         connect(m_device, &AbstractDevice::buttonPressed, this, &DeviceInterface::buttonPressed);
         connect(m_device, &AbstractDevice::informationChanged, this, &DeviceInterface::slot_informationChanged);
-        m_device->connectToDevice();
+        m_device->pair();
         return "";
     }
     
@@ -401,6 +406,7 @@ void DeviceInterface::onConnectionStateChanged()
         }
 
         sendBufferedNotifications();
+        updateCalendar();
 
         //TODO this enables music controls
         miBandService()->writeChunked(MiBandService::UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER, 3, QByteArray("\x01\x00\x01\x00\x00\x00\x01\x00", 8));
@@ -417,7 +423,7 @@ void DeviceInterface::slot_informationChanged(AbstractDevice::Info key, const QS
 
     //Handle notification of low battery
     if (key == AbstractDevice::INFO_BATTERY) {
-        if (val.toInt() != m_lastBatteryLevel) {         
+        if (val.toInt() != m_lastBatteryLevel) {
             if (val.toInt() <= 10 && val.toInt() < m_lastBatteryLevel && m_settings.value("/uk/co/piggz/amazfish/app/notifylowbattery").toBool()) {
                 sendAlert("Amazfish", tr("Low Battery"), tr("Battery level now ") + QString::number(m_lastBatteryLevel) + "%");
             }
@@ -562,12 +568,19 @@ void DeviceInterface::onRefreshTimer()
     qDebug() << "DeviceInterface::onRefreshTimer";
     static int syncActivitiesMinutes = 0;
     static int syncWeatherMinutes = 0;
+    static int syncCalendarMinutes = 0;
 
     syncWeatherMinutes++;
     if (syncWeatherMinutes >= m_settings.value("/uk/co/piggz/amazfish/app/refreshweather").toInt()) {
         syncWeatherMinutes = 0;
         qDebug() << "weather interval reached";
         m_currentWeather.refresh();
+    }
+    syncCalendarMinutes++;
+    if (syncCalendarMinutes >= m_settings.value("/uk/co/piggz/amazfish/app/refreshcalendar").toInt()) {
+        syncCalendarMinutes = 0;
+        qDebug() << "calendar interval reached";
+        updateCalendar();
     }
 
     if (m_settings.value("/uk/co/piggz/amazfish/app/autosyncdata").toBool()) {
@@ -599,7 +612,7 @@ void DeviceInterface::registerDBus()
             QCoreApplication::quit();
             return;
         }
-         m_dbusRegistered = true;
+        m_dbusRegistered = true;
 
         qDebug() << "amazfish-daemon: succesfully registered to dbus sessionBus";
     }
@@ -609,3 +622,32 @@ void DeviceInterface::triggerSendWeather()
 {
     m_currentWeather.refresh();
 }
+
+void DeviceInterface::updateCalendar()
+{
+    if (supportsFeature(AbstractDevice::FEATURE_EVENT_REMINDER)) {
+        if (m_device) {
+            QList<CalendarReader::EventData> eventlist = m_calendarReader.getEvents();
+
+            int id=0;
+            foreach (CalendarReader::EventData event, eventlist) {
+                qDebug() << event.uniqueId << event.displayLabel << event.description << event.startTime;
+                m_device->sendEventReminder(id, event.startTime, event.displayLabel);
+                id++;
+            }
+        }
+    }
+}
+
+bool DeviceInterface::supportsFeature(int f){
+    return (supportedFeatures() & f) == f;
+}
+
+int DeviceInterface::supportedFeatures()
+{
+    if (m_device) {
+        return m_device->supportedFeatures();
+    }
+    return 0;
+}
+

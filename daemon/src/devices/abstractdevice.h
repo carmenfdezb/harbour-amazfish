@@ -13,14 +13,15 @@ class AbstractDevice : public QBLEDevice
 public:
     enum Feature{
         FEATURE_HRM = 1,
-        FEATURE_WEATHER,
-        FEATURE_ACTIVITY,
-        FEATURE_STEPS,
-        FEATURE_ALARMS,
-        FEATURE_ALERT,
-        FEATURE_NOTIFIATION
+        FEATURE_WEATHER = 2,
+        FEATURE_ACTIVITY = 4,
+        FEATURE_STEPS = 8,
+        FEATURE_ALARMS = 16,
+        FEATURE_ALERT = 32,
+        FEATURE_NOTIFIATION = 64,
+        FEATURE_EVENT_REMINDER = 128
     };
-    Q_ENUM(Feature);
+    Q_ENUM(Feature)
 
     enum Info {
         INFO_SWVER = 1,
@@ -33,7 +34,7 @@ public:
         INFO_STEPS,
         INFO_HEARTRATE
     };
-    Q_ENUM(Info);
+    Q_ENUM(Info)
 
     enum Settings {
         SETTING_USER_PROFILE,
@@ -50,7 +51,7 @@ public:
         SETTING_DEVICE_UNIT,
         SETTING_DISCONNECT_NOTIFICATION
     };
-    Q_ENUM(Settings);
+    Q_ENUM(Settings)
 
     explicit AbstractDevice(const QString &pairedName, QObject *parent = 0);
     
@@ -61,7 +62,9 @@ public:
     virtual void disconnectFromDevice() override;
     virtual QString connectionState() const;
 
-    virtual bool supportsFeature(Feature f) = 0;
+    bool supportsFeature(Feature f);
+    virtual int supportedFeatures() = 0;
+
     virtual QString deviceType() = 0;
     QString deviceName();
     virtual bool operationRunning() = 0;
@@ -80,7 +83,7 @@ public:
     virtual void rebootWatch();
     virtual void sendAlert(const QString &sender, const QString &subject, const QString &message) = 0;
     virtual void incomingCall(const QString &caller) = 0;
-
+    virtual void sendEventReminder(int id, const QDateTime &dt, const QString &event);
 
     //signals    
     Q_SIGNAL void message(const QString &text);

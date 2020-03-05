@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Configuration 1.0
+ import uk.co.piggz.amazfish 1.0
 
 Page {
     id: page
@@ -32,6 +33,12 @@ Page {
         defaultValue: false
     }
 
+    ConfigurationValue {
+        id: appRefreshCalendar
+        key: "/uk/co/piggz/amazfish/app/refreshcalendar"
+        defaultValue: 60
+    }
+
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -53,19 +60,28 @@ Page {
                 title: qsTr("Device Settings")
             }
 
+            SectionHeader {
+                text: qsTr("Notifications")
+            }
+
             TextSwitch {
                 id: chkNotifyConnect
+                visible: supportsFeature(DaemonInterface.FEATURE_NOTIFIATION)
+
                 width: parent.width
                 text: qsTr("Notify on connect")
             }
 
-            Slider {
-                id: sldWeatherRefresh
+            TextSwitch {
+                id: chkNotifyLowBattery
+                visible: supportsFeature(DaemonInterface.FEATURE_NOTIFIATION)
+
                 width: parent.width
-                minimumValue: 15
-                maximumValue: 120
-                stepSize: 15
-                label: qsTr("Refresh weather every (") + value + qsTr(") minutes")
+                text: qsTr("Low battery notification")
+            }
+
+            SectionHeader {
+                text: qsTr("Refresh rates")
             }
 
             TextSwitch {
@@ -74,10 +90,81 @@ Page {
                 text: qsTr("Sync activity data each hour")
             }
 
-            TextSwitch {
-                id: chkNotifyLowBattery
+            Slider {
+                id: sldWeatherRefresh
+                visible: supportsFeature(DaemonInterface.FEATURE_WEATHER)
+
                 width: parent.width
-                text: qsTr("Low battery notification")
+                minimumValue: 15
+                maximumValue: 120
+                stepSize: 15
+                label: qsTr("Refresh weather every (") + value + qsTr(") minutes")
+            }
+
+            Slider {
+                id: sldCalendarRefresh
+                width: parent.width
+                minimumValue: 15
+                maximumValue: 240
+                stepSize: 15
+                label: qsTr("Refresh calendar every (") + value + qsTr(") minutes")
+                visible: supportsFeature(DaemonInterface.FEATURE_EVENT_REMINDER)
+            }
+
+            SectionHeader {
+                text: "Amazfish Service"
+            }
+
+            TextSwitch {
+                id: chkServiceEnabled
+                checked: serviceEnabledState === false ? false : true
+                text: qsTr("Start service on boot")
+                onClicked: {
+                    if (serviceEnabledState) {
+                        systemdManager.disableService();
+                    } else {
+                        systemdManager.enableService();
+                    }
+                }
+            }
+
+            Label {
+                width: parent.width
+                text: qsTr("Start/Stop the Amazfish Background Service")
+                color: Theme.highlightColor
+                font.pixelSize: Theme.fontSizeSmall
+            }
+
+            Row {
+                id: serviceButtonRow
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                spacing: 10
+
+                Button {
+                    id: start
+                    text: qsTr("Start")
+                    enabled: serviceActiveState ? false : true
+                    onClicked: {
+                        systemdServiceIface.call("Start", ["replace"])
+                    }
+                }
+
+                Button {
+                    id: stop
+                    text: qsTr("Stop")
+                    enabled: serviceActiveState ? true : false
+                    onClicked: {
+                        systemdServiceIface.call("Stop", ["replace"])
+                    }
+                }
+            }
+
+            Separator {
+                width: parent.width
+                horizontalAlignment: Qt.AlignHCenter
+                color: Theme.highlightColor
             }
 
             Button {
@@ -92,6 +179,7 @@ Page {
     Component.onCompleted: {
         chkNotifyConnect.checked = appNotifyConnect.value;
         sldWeatherRefresh.value = appRefreshWeather.value;
+        sldCalendarRefresh.value = appRefreshCalendar.value;
         chkAutoSyncData.checked = appAutoSyncData.value;
         chkNotifyLowBattery.checked = appNotifyLowBattery.value;
     }
@@ -99,10 +187,13 @@ Page {
     function saveSettings() {
         appNotifyConnect.value = chkNotifyConnect.checked;
         appRefreshWeather.value = sldWeatherRefresh.value;
+        appRefreshCalendar.value = sldCalendarRefresh.value;
         appAutoSyncData.value = chkAutoSyncData.checked;
         appNotifyLowBattery.value = chkNotifyLowBattery.checked;
 
-        weather.refresh();
+        if (supportsFeature(DaemonInterface.FEATURE_WEATHER)) {
+            weather.refresh();
+        }
     }
 
 }
