@@ -2,7 +2,6 @@
 #define BIPFIRMWARESERVICE_H
 
 #include "qble/qbleservice.h"
-#include "settingsmanager.h"
 #include "updatefirmwareoperation.h"
 
 /*
@@ -32,7 +31,7 @@ public:
     static const char COMMAND_FIRMWARE_REBOOT = 0x05; // to UUID_CHARACTERISTIC_FIRMWARE
 
 
-    void prepareFirmwareDownload(const AbstractFirmwareInfo *info);
+    void prepareFirmwareDownload(const AbstractFirmwareInfo *info, UpdateFirmwareOperation* operation);
     void startDownload();
     Q_SIGNAL void downloadProgress(int percent);
 
@@ -42,7 +41,6 @@ public:
 private:
     Q_SLOT void characteristicChanged(const QString &characteristic, const QByteArray &value);
 
-    SettingsManager m_settings;
     int m_operationRunning = 0;
 
     UpdateFirmwareOperation *m_updateFirmware = nullptr;

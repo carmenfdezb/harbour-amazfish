@@ -5,11 +5,12 @@
 
 #include "mibandservice.h"
 #include "typeconversion.h"
+#include "amazfishconfig.h"
 
 ActivityFetchOperation::ActivityFetchOperation(QBLEService *service, KDbConnection *conn) : AbstractFetchOperation(service)
 {
     m_conn = conn;
-    setLastSyncKey("/uk/co/piggz/amazfish/device/lastactivitysyncmillis");
+    setLastSyncKey("device/lastactivitysyncmillis");
 }
 
 void ActivityFetchOperation::start()
@@ -19,7 +20,7 @@ void ActivityFetchOperation::start()
 
     qDebug() << "last activity sync was" << startDate();
 
-    QByteArray rawDate = TypeConversion::dateTimeToBytes(startDate(), 0);
+    QByteArray rawDate = TypeConversion::dateTimeToBytes(startDate(), 0, false);
 
     m_service->enableNotification(MiBandService::UUID_CHARACTERISTIC_MIBAND_ACTIVITY_DATA);
     m_service->enableNotification(MiBandService::UUID_CHARACTERISTIC_MIBAND_FETCH_DATA);
@@ -49,6 +50,10 @@ bool ActivityFetchOperation::finished(bool success)
     if (success) {
         //store the successful samples
         saved = saveSamples();
+        if (m_sampleTime.isDaylightTime()) {
+            qDebug() << "Adding DST compensation to last sample time";
+            m_sampleTime = m_sampleTime.addSecs(3600);
+        }
         saveLastActivitySync(m_sampleTime.toMSecsSinceEpoch());
         qDebug() << "finished fetch operation, last record was " << m_sampleTime;
     }
@@ -57,52 +62,60 @@ bool ActivityFetchOperation::finished(bool success)
 
 bool ActivityFetchOperation::saveSamples()
 {
-    bool saved = true;
-    if (m_samples.count() > 0) {
-        if (m_conn && m_conn->isDatabaseUsed()) {
-            m_sampleTime = startDate();
-
-            uint id = qHash(m_settings.value("/uk/co/piggz/amazfish/profile/name").toString());
-            uint devid = qHash(m_settings.value("/uk/co/piggz/amazfish/pairedAddress").toString());
-
-            KDbTransaction transaction = m_conn->beginTransaction();
-            KDbTransactionGuard tg(transaction);
-
-            KDbFieldList fields;
-
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("timestamp"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("timestamp_dt"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("device_id"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("user_id"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("raw_intensity"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("steps"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("raw_kind"));
-            fields.addField(m_conn->tableSchema("mi_band_activity")->field("heartrate"));
-
-            for (int i = 0; i < m_samples.count(); ++i) {
-                QList<QVariant> values;
-                values << m_sampleTime.toMSecsSinceEpoch() / 1000;
-                values << m_sampleTime;
-                values << devid;
-                values << id;
-                values << m_samples[i].intensity();
-                values << m_samples[i].steps();
-                values << m_samples[i].kind();
-                values << m_samples[i].heartrate();
-
-                if (!m_conn->insertRecord(&fields, values)) {
-                    qDebug() << "error inserting record";
-                    saved = false;
-                    break;
-                }
-                m_sampleTime = m_sampleTime.addSecs(60);
-            }
-            tg.commit();
-        } else {
-            qDebug() << "Database not connected";
-            saved = false;
-        }
+    if (m_samples.count() <= 0) {
+        return true;
     }
-    return saved;
+
+    if (!m_conn && !m_conn->isDatabaseUsed()) {
+        qDebug() << "Database not connected";
+        return false;
+    }
+
+    m_sampleTime = startDate();
+    qDebug() << "Start sample time" << m_sampleTime;
+
+    auto config = AmazfishConfig::instance();
+    uint id = qHash(config->profileName());
+    uint devid = qHash(config->pairedAddress());
+
+    KDbTransaction transaction = m_conn->beginTransaction();
+    KDbTransactionGuard tg(transaction);
+
+    KDbFieldList fields;
+    auto mibandActivity = m_conn->tableSchema("mi_band_activity");
+
+    fields.addField(mibandActivity->field("timestamp"));
+    fields.addField(mibandActivity->field("timestamp_dt"));
+    fields.addField(mibandActivity->field("device_id"));
+    fields.addField(mibandActivity->field("user_id"));
+    fields.addField(mibandActivity->field("raw_intensity"));
+    fields.addField(mibandActivity->field("steps"));
+    fields.addField(mibandActivity->field("raw_kind"));
+    fields.addField(mibandActivity->field("heartrate"));
+
+    QDateTime saveTime;
+
+    for (int i = 0; i < m_samples.count(); ++i) {
+        QList<QVariant> values;
+
+
+        values << m_sampleTime.toMSecsSinceEpoch() / 1000;
+        values << m_sampleTime;
+        values << devid;
+        values << id;
+        values << m_samples[i].intensity();
+        values << m_samples[i].steps();
+        values << m_samples[i].kind();
+        values << m_samples[i].heartrate();
+
+        if (!m_conn->insertRecord(&fields, values)) {
+            qDebug() << "error inserting record";
+            return false;
+        }
+        m_sampleTime = m_sampleTime.addSecs(60);
+    }
+    tg.commit();
+
+    return true;
 }
 

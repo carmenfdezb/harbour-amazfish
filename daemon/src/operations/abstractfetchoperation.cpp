@@ -1,6 +1,7 @@
 #include "abstractfetchoperation.h"
 #include "mibandservice.h"
 #include "typeconversion.h"
+#include "amazfishconfig.h"
 
 AbstractFetchOperation::AbstractFetchOperation(QBLEService *service) : AbstractOperation(service)
 {
@@ -9,7 +10,7 @@ AbstractFetchOperation::AbstractFetchOperation(QBLEService *service) : AbstractO
 
 QDateTime AbstractFetchOperation::lastActivitySync()
 {
-    qlonglong ls = m_settings.value(m_lastSyncKey).toLongLong();
+    qlonglong ls = AmazfishConfig::instance()->value(m_lastSyncKey).toLongLong();
 
     if (ls == 0) {
         return QDateTime::currentDateTime().addDays(-100);
@@ -22,7 +23,7 @@ QDateTime AbstractFetchOperation::lastActivitySync()
 
 void AbstractFetchOperation::saveLastActivitySync(qint64 millis)
 {
-    m_settings.setValue(m_lastSyncKey, millis);
+    AmazfishConfig::instance()->setValue(m_lastSyncKey, millis);
 }
 
 void AbstractFetchOperation::setStartDate(const QDateTime &sd)
@@ -55,7 +56,10 @@ bool AbstractFetchOperation::handleMetaData(const QByteArray &value)
             int expectedDataLength = TypeConversion::toUint32(value[3], value[4], value[5], value[6]);
 
             // last 8 bytes are the start date
+            //! Here, we read the start date/time and dont apply the TZ offset.  We then apply the local
+            //! TZ.  This should work in most cases i think!
             QDateTime startDate = TypeConversion::rawBytesToDateTime(value.mid(7, 8), false);
+            startDate.setTimeZone(QTimeZone::systemTimeZone());
             setStartDate(startDate);
 
             qDebug() << "About to transfer data from " << startDate;

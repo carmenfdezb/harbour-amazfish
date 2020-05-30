@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-import Nemo.Configuration 1.0
 import "../components/"
 import uk.co.piggz.amazfish 1.0
 
@@ -19,12 +18,8 @@ Page {
         // Tell SilicaFlickable the height of its content.
         contentHeight: column.height
 
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Download Data")
-                onClicked: DaemonInterfaceInstance.downloadActivityData();
-                enabled: DaemonInterfaceInstance.connectionState === "authenticated"
-            }
+        PullDownMenu {            
+            DownloadDataMenuItem {}
         }
 
         // Place our content in a Column.  The PageHeader is always placed at the top
@@ -132,11 +127,11 @@ Page {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active) {
+        //if (status === PageStatus.Active) {
             //            if (!pageStack._currentContainer.attachedContainer) {
-            pageStack.pushAttached(Qt.resolvedUrl("SportsSummaryPage.qml"))
+        //    pageStack.pushAttached(Qt.resolvedUrl("SportsSummaryPage.qml"))
             //        }
-        }
+        //}
     }
 
     Component.onCompleted: {

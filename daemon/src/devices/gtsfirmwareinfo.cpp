@@ -8,19 +8,20 @@ GtsFirmwareInfo::GtsFirmwareInfo(const QByteArray &bytes)
     m_bytes = bytes;
 
     calculateCRC16();
+    calculateCRC32();
     determineFirmwareType();
     determineFirmwareVersion();
 
     //qDebug() << mBytes;
-    qDebug() << m_type << m_version << m_crc16;
+    qDebug() << m_type << m_version << m_crc16 << m_crc32;
 }
 
 void GtsFirmwareInfo::determineFirmwareType() {
     qDebug() << "Determining firmware type";
     m_type = Invalid;
 
-    if (m_bytes.startsWith(QByteArray(RES_HEADER, sizeof(RES_HEADER))) || m_bytes.startsWith(QByteArray(NEWRES_HEADER, sizeof(NEWRES_HEADER)))) {
-        m_type = Res;
+    if (m_bytes.indexOf(QByteArray(NEWRES_HEADER, sizeof(NEWRES_HEADER))) == COMPRESSED_RES_HEADER_OFFSET_NEW) {
+        m_type = Res_Compressed;
     }
     if (m_bytes.startsWith(QByteArray(GPS_HEADER, sizeof(GPS_HEADER))) || m_bytes.startsWith(QByteArray(GPS_HEADER2, sizeof(GPS_HEADER2))) || m_bytes.startsWith(QByteArray(GPS_HEADER3, sizeof(GPS_HEADER3))) || m_bytes.startsWith(QByteArray(GPS_HEADER4, sizeof(GPS_HEADER4)))) {
         m_type = GPS;
@@ -31,13 +32,13 @@ void GtsFirmwareInfo::determineFirmwareType() {
     if (m_bytes.startsWith(QByteArray(GPS_CEP_HEADER, sizeof(GPS_CEP_HEADER)))) {
         m_type = GPS_CEP;
     }
-    if (m_bytes.startsWith(QByteArray(FW_HEADER, sizeof(FW_HEADER)))) {
+    if (m_bytes.indexOf(QByteArray(FW_HEADER, sizeof(FW_HEADER))) == FW_OFFSET) {
         m_version = m_crcMap[m_crc16];
         qDebug() << "Version:" << m_version << "CRC:" << m_crc16;
         m_type = Firmware;
     }
 
-    if (m_bytes.startsWith(QByteArray(WATCHFACE_HEADER, sizeof(WATCHFACE_HEADER)))) {
+    if (m_bytes.startsWith(QByteArray(WATCHFACE_HEADER, sizeof(WATCHFACE_HEADER))) || m_bytes.indexOf(QByteArray(WATCHFACE_HEADER, sizeof(WATCHFACE_HEADER))) == COMPRESSED_RES_HEADER_OFFSET || m_bytes.indexOf(QByteArray(WATCHFACE_HEADER, sizeof(WATCHFACE_HEADER))) == COMPRESSED_RES_HEADER_OFFSET_NEW) {
         m_type = Watchface;
     }
     if (m_bytes.startsWith(QByteArray(NEWFT_HEADER, sizeof(NEWFT_HEADER)))) {
@@ -52,7 +53,7 @@ void GtsFirmwareInfo::determineFirmwareType() {
 bool GtsFirmwareInfo::supportedOnDevice(const QString &device) const
 {
     qDebug() << "Checking if device suppoerted: " << device;
-    return device == "Amazfit GTS" && m_type != Invalid;
+    return device == "Amazfit GTS" && m_type != Invalid && !m_version.contains("unknown");
 }
 
 void GtsFirmwareInfo::determineFirmwareVersion()
@@ -68,7 +69,7 @@ void GtsFirmwareInfo::determineFirmwareVersion()
             version = "RES " + version;
             break;
         case Res_Compressed:
-            version = "RES " + version;
+            version = "RES_COMPRESSED " + version;
             break;
         case Font:
             version = "FONT " + version;
@@ -88,16 +89,16 @@ void GtsFirmwareInfo::determineFirmwareVersion()
             version = "FW (unknown)";
             break;
         case Res:
-            version = "RES " + QString::number(m_bytes[5]);
+            version = "RES (unknown)";
             break;
         case Res_Compressed:
-            version = "RES " + QString::number(m_bytes[14]);
+            version = "RES_COMPRESSED (unknown)";
             break;
         case Font:
-            version = "FONT " + QString::number(m_bytes[4]);
+            version = "FONT (unknown)";
             break;
         case Font_Latin:
-            version = "FONT LATIN " + QString::number(m_bytes[4]);
+            version = "FONT LATIN (unknown)";
             break;
         case GPS:
             version = "GPS (unknown)";
@@ -109,10 +110,10 @@ void GtsFirmwareInfo::determineFirmwareVersion()
             version = "ALM (unknown)";
             break;
         case Watchface:
-            version = "Watchface (unknown)";
+            version = "Watchface";
             break;
         default:
-            version = "Invalid";
+            version = "(unknown)";
         }
     }
 
@@ -122,13 +123,17 @@ void GtsFirmwareInfo::determineFirmwareVersion()
 void GtsFirmwareInfo::populateCrcMap()
 {
     // firmware
+    m_crcMap.insert(48669, "0.0.8.71");
 
     // Latin Firmware
 
     // resources
+    m_crcMap.insert(11789, "0.0.8.71");
 
     // gps
     m_crcMap.insert(62532, "18344,eb2f43f,126");
 
     // font
+    m_crcMap.insert(27996, "18344,eb2f43f,126");
+
 }

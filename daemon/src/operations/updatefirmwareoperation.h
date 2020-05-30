@@ -11,16 +11,23 @@ public:
 
     bool handleMetaData(const QByteArray &meta) override;
     void handleData(const QByteArray &data) override;
-    void start();
+    void start() override;
 
     QString version();
-private:
+
+protected:
+
     const AbstractFirmwareInfo *m_info = nullptr;
     QByteArray m_fwBytes;
 
-    bool sendFwInfo();
-    void sendFirmwareData();
-    void sendChecksum();
+    virtual bool sendFwInfo();
+    virtual void sendFirmwareData();
+    virtual void sendChecksum();
+    virtual QByteArray getFirmwareStartCommand();
+    bool m_startWithFWInfo = true;
+
+private:
+    bool m_needToSendFwInfo = true;
 };
 
 #endif // UPDATEFIRMWAREOPERATION_H

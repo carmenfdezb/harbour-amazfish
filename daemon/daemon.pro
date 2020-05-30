@@ -13,7 +13,7 @@
 TARGET = harbour-amazfishd
 
 CONFIG += sailfishapp
-LIBS += -Lqble/qble
+LIBS += -Lqble/qble -L$$OUT_PWD/../lib -lamazfish -lz
 
 QT +=  contacts positioning KDb3
 
@@ -25,7 +25,8 @@ INCLUDEPATH += $$PWD/src/services/ \
                $$PWD/src/operations/ \
                $$PWD/src/devices/ \
                $$PWD/src/ \
-               $$PWD/../
+               $$PWD/../ \
+               ../lib/src
 
 target.path = /usr/bin/
 systemd_services.path = /usr/lib/systemd/user/
@@ -48,11 +49,11 @@ SOURCES += \
     src/devices/biplitefirmwareinfo.cpp \
     src/devices/gtsdevice.cpp \
     src/devices/gtsfirmwareinfo.cpp \
+    src/operations/updatefirmwareoperationnew.cpp \
     src/qaesencryption.cpp \
     src/voicecallhandler.cpp \
     src/voicecallmanager.cpp \
     src/typeconversion.cpp \
-    src/settingsmanager.cpp \
     src/bipbatteryinfo.cpp \
     src/notificationslistener.cpp \
     src/devicefactory.cpp \
@@ -98,12 +99,12 @@ HEADERS += \
     src/devices/biplitefirmwareinfo.h \
     src/devices/gtsdevice.h \
     src/devices/gtsfirmwareinfo.h \
+    src/operations/updatefirmwareoperationnew.h \
     src/qaesencryption.h \
     src/notificationslistener.h \
     src/voicecallhandler.h \
     src/voicecallmanager.h \
     src/typeconversion.h \
-    src/settingsmanager.h \
     src/bipbatteryinfo.h \
     src/deviceinterface.h \
     src/datasource.h \

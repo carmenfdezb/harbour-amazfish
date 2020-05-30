@@ -21,10 +21,11 @@ QByteArray fromInt24(int val)
 
 QByteArray fromInt32(int val)
 {
+    qDebug() << "COnverting int32 to char" << val;
     return QByteArray(1, val & 0xff) + QByteArray(1, ((val >> 8) & 0xff)) + QByteArray(1, ((val >> 16) & 0xff)) + QByteArray(1, ((val >> 24) & 0xff));
 }
 
-QByteArray dateTimeToBytes(const QDateTime &dt, int format)
+QByteArray dateTimeToBytes(const QDateTime &dt, int format, bool adjustForTZ)
 {
     QByteArray ret;
 
@@ -48,7 +49,10 @@ QByteArray dateTimeToBytes(const QDateTime &dt, int format)
     ret += QByteArray(1, char(0x00));
 
     //Timezone
-    int utcOffset = QTimeZone::systemTimeZone().offsetFromUtc(dt);
+    int utcOffset = 0;
+    if (adjustForTZ) {
+        utcOffset = QTimeZone::systemTimeZone().offsetFromUtc(dt);
+    }
     qDebug() << "UTC offset it " << utcOffset;
 
     ret += char((utcOffset / (60 * 60)) * 4);
@@ -65,7 +69,7 @@ QDateTime rawBytesToDateTime(const QByteArray &value, bool honorDeviceTimeOffset
 
         QTimeZone tz(0);
 
-        if (value.length() > 7) {
+        if (value.length() > 7 && honorDeviceTimeOffset) {
             tz = QTimeZone(value[7] * 15 * 60);
         } /*else {
             timestamp.setTimeSpec(Qt::LocalTime);

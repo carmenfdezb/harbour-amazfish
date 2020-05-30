@@ -46,10 +46,6 @@
 <context>
     <name>AnalysisPage</name>
     <message>
-        <source>Download Data</source>
-        <translation>Daten abrufen</translation>
-    </message>
-    <message>
         <source>Analysis</source>
         <translation>Auswertung</translation>
     </message>
@@ -64,6 +60,13 @@
     <message>
         <source>Intensity</source>
         <translation>Intensität</translation>
+    </message>
+</context>
+<context>
+    <name>AuthKeyDialog</name>
+    <message>
+        <source>Enter auth key</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -94,6 +97,13 @@
     </message>
     <message>
         <source>File not supported on this device</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DaemonInterface</name>
+    <message>
+        <source>Unexpected error</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -177,6 +187,13 @@
     </message>
 </context>
 <context>
+    <name>DownloadDataMenuItem</name>
+    <message>
+        <source>Download Data</source>
+        <translation type="unfinished">Daten abrufen</translation>
+    </message>
+</context>
+<context>
     <name>FirstPage</name>
     <message>
         <source>Pair with watch</source>
@@ -211,11 +228,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Goal: </source>
+        <source>%1%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source> Steps</source>
+        <source>%1 bpm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Data Graphs</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -227,25 +248,68 @@
     </message>
 </context>
 <context>
-    <name>PairPage</name>
+    <name>HeartratePage</name>
     <message>
-        <source>Start scan</source>
-        <translation>Scan starten</translation>
+        <source>Heartrate</source>
+        <translation type="unfinished">Pulsrate</translation>
     </message>
     <message>
-        <source>Try again</source>
-        <translation>Versuch es noch einmal</translation>
-    </message>
-    <message>
-        <source>Pull down to start scan</source>
+        <source>BPM</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Relaxed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Intensive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Aerobic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Anerobic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>VO2 Max</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PairPage</name>
     <message>
         <source>Pair Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save Key</source>
+        <source>Stop scanning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan for devices</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scanning for devices…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pairing…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No devices found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pull down to scan for devices</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -253,34 +317,6 @@
     <name>PairSelectDeviceType</name>
     <message>
         <source>Select Device Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfit GTS</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfit Bip Lite</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfit Bip Watch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfit Cor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mi Band 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>MI Band 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Mi Smart Band 4</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -641,10 +677,6 @@
 <context>
     <name>SleepPage</name>
     <message>
-        <source>Download Data</source>
-        <translation>Daten abrufen</translation>
-    </message>
-    <message>
         <source>Sleep Summary</source>
         <translation>Schlaf Zusammenfassung</translation>
     </message>
@@ -653,15 +685,25 @@
         <translation>Schlaf</translation>
     </message>
     <message>
-        <source>hrs</source>
-        <translation>Std</translation>
-    </message>
-    <message>
-        <source>hrs (deep)</source>
+        <source>Note: last nights sleep is updated at mid-day</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Note: last nights sleep is updated at mid-day</source>
+        <source>h:mm</source>
+        <extracomment>Format of sleep hours</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Deep %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>MM/dd</source>
+        <extracomment>Format for day on the sleep summary graph</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hours</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -679,12 +721,19 @@
 <context>
     <name>StepsPage</name>
     <message>
-        <source>Download Data</source>
-        <translation>Daten abrufen</translation>
-    </message>
-    <message>
         <source>Steps</source>
         <translation>Schritte</translation>
+    </message>
+</context>
+<context>
+    <name>UnpairDeviceDialog</name>
+    <message>
+        <source>Unpair</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Before proceeding you need to unpair your current device.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
