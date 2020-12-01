@@ -28,8 +28,7 @@ int BipDevice::supportedFeatures()
             FEATURE_ACTIVITY |
             FEATURE_STEPS |
             FEATURE_ALARMS |
-            FEATURE_ALERT |
-            FEATURE_NOTIFIATION;
+            FEATURE_ALERT;
 }
 
 QString BipDevice::deviceType()
@@ -190,6 +189,20 @@ void BipDevice::authenticated(bool ready)
     }
 }
 
+void BipDevice::sendWeather(CurrentWeather *weather)
+{
+    MiBandService *mi = qobject_cast<MiBandService*>(service(UUID_SERVICE_MIBAND));
+    if (mi){
+        bool supportsConditionString = (softwareRevision() > "V0.0.8.74");
+        mi->sendWeather(weather, supportsConditionString);
+    }
+}
+
+int BipDevice::activitySampleSize()
+{
+    return m_ActivitySampleSize;
+}
+
 AbstractFirmwareInfo *BipDevice::firmwareInfo(const QByteArray &bytes)
 {
     return new BipFirmwareInfo(bytes);
@@ -239,6 +252,7 @@ void BipDevice::initialise()
         connect(mi, &QBLEService::operationRunningChanged, this, &QBLEDevice::operationRunningChanged, Qt::UniqueConnection);
         connect(mi, &MiBandService::buttonPressed, this, &BipDevice::handleButtonPressed, Qt::UniqueConnection);
         connect(mi, &MiBandService::informationChanged, this, &BipDevice::informationChanged, Qt::UniqueConnection);
+        connect(mi, &MiBandService::serviceEvent, this, &BipDevice::serviceEvent, Qt::UniqueConnection);
     }
 
     MiBand2Service *mi2 = qobject_cast<MiBand2Service*>(service(UUID_SERVICE_MIBAND2));
@@ -266,6 +280,20 @@ void BipDevice::initialise()
     HRMService *hrm = qobject_cast<HRMService*>(service(UUID_SERVICE_HRM));
     if (hrm) {
         connect(hrm, &HRMService::informationChanged, this, &BipDevice::informationChanged, Qt::UniqueConnection);
+    }
+}
+
+void BipDevice::serviceEvent(char event)
+{
+    switch(event) {
+    case MiBandService::EVENT_DECLINE_CALL:
+        emit deviceEvent(AbstractDevice::EVENT_DECLINE_CALL);
+        break;
+    case MiBandService::EVENT_IGNORE_CALL:
+        emit deviceEvent(AbstractDevice::EVENT_IGNORE_CALL);
+        break;
+    default:
+        break;
     }
 }
 

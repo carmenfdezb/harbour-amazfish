@@ -20,9 +20,6 @@ DeviceInterface::DeviceInterface()
     //Start by registering on DBUS
     registerDBus();
 
-    //Intercept notificaions
-    m_notificationListener = new NotificationsListener(this);
-
     auto config = AmazfishConfig::instance();
 
     //Create a device object
@@ -32,8 +29,9 @@ DeviceInterface::DeviceInterface()
         connect(m_device, &AbstractDevice::message, this, &DeviceInterface::message);
         connect(m_device, &AbstractDevice::downloadProgress, this, &DeviceInterface::downloadProgress);
         connect(m_device, &QBLEDevice::operationRunningChanged, this, &DeviceInterface::operationRunningChanged);
-        connect(m_device, &AbstractDevice::buttonPressed, this, &DeviceInterface::buttonPressed);
+        connect(m_device, &AbstractDevice::buttonPressed, this, &DeviceInterface::handleButtonPressed);
         connect(m_device, &AbstractDevice::informationChanged, this, &DeviceInterface::slot_informationChanged);
+        connect(m_device, &AbstractDevice::deviceEvent, this, &DeviceInterface::deviceEvent);
     }
 
     //Create the DBUS HRM Interface
@@ -42,12 +40,12 @@ DeviceInterface::DeviceInterface()
     setupDatabase();
 
     //Notifications
-    connect(m_notificationListener, &NotificationsListener::notificationReceived, this, &DeviceInterface::notificationReceived);
+    connect(&m_notificationMonitor, &watchfish::NotificationMonitor::notification, this, &DeviceInterface::onNotification);
 
     // Calls
-    m_voiceCallManager = new VoiceCallManager(this);
-    connect(m_voiceCallManager, &VoiceCallManager::activeVoiceCallChanged, this, &DeviceInterface::onActiveVoiceCallChanged);
-
+#ifdef MER_EDITION_SAILFISH
+    connect(&m_voiceCallController, &watchfish::VoiceCallController::ringingChanged, this, &DeviceInterface::onRingingChanged);
+#endif
     //Weather
     connect(&m_cityManager, &CityManager::citiesChanged, this, &DeviceInterface::onCitiesChanged);
     connect(&m_currentWeather, &CurrentWeather::ready, this, &DeviceInterface::onWeatherReady);
@@ -55,14 +53,16 @@ DeviceInterface::DeviceInterface()
         m_currentWeather.setCity(qobject_cast<City*>(m_cityManager.cities()[0]));
     }
 
-    //Calendar
-
-    updateCalendar();
-
     //Refresh timer
     m_refreshTimer = new QTimer();
     connect(m_refreshTimer, &QTimer::timeout, this, &DeviceInterface::onRefreshTimer);
     m_refreshTimer->start(60000);
+
+    //Music
+    connect(&m_musicController, &watchfish::MusicController::statusChanged, this, &DeviceInterface::musicChanged);
+    connect(&m_musicController, &watchfish::MusicController::titleChanged, this, &DeviceInterface::musicChanged);
+    connect(&m_musicController, &watchfish::MusicController::artistChanged, this, &DeviceInterface::musicChanged);
+    connect(&m_musicController, &watchfish::MusicController::albumChanged, this, &DeviceInterface::musicChanged);
 
     //Finally, connect to device if it is defined
     QString pairedAddress = config->pairedAddress();
@@ -110,8 +110,8 @@ QString DeviceInterface::pair(const QString &name, const QString &address)
         connect(m_device, &QBLEDevice::operationRunningChanged, this, &DeviceInterface::operationRunningChanged);
         connect(m_device, &AbstractDevice::buttonPressed, this, &DeviceInterface::buttonPressed);
         connect(m_device, &AbstractDevice::informationChanged, this, &DeviceInterface::slot_informationChanged);
-        m_device->pair();
-        return "";
+        connect(m_device, &AbstractDevice::deviceEvent, this, &DeviceInterface::deviceEvent);
+        return m_device->pair();
     }
     
     qDebug() << "DeviceInterface::pair:device not created";
@@ -145,86 +145,38 @@ HRMService *DeviceInterface::hrmService() const
     return qobject_cast<HRMService*>(m_device->service(HRMService::UUID_SERVICE_HRM));
 }
 
-void DeviceInterface::notificationReceived(const QString &appName, const QString &summary, const QString &body)
+void DeviceInterface::onNotification(watchfish::Notification *notification)
 {
     if (m_device && m_device->connectionState() == "authenticated" && m_device->supportsFeature(AbstractDevice::FEATURE_ALERT)){
-        m_device->sendAlert(appName, summary, body);
+        qDebug() << "Sending alert to device";
+        m_device->sendAlert(notification->appName(), notification->summary(), notification->body());
     } else {
         qDebug() << "no notification service, buffering notification";
-        WatchNotification n;
-        n.appName = appName;
-        n.summary = summary;
-        n.body = body;
-        m_notificationBuffer.enqueue(n);
+
+        m_notificationBuffer.enqueue(notification);
         if (m_notificationBuffer.count() > 10) {
             m_notificationBuffer.dequeue();
         }
     }
 }
 
-void DeviceInterface::onActiveVoiceCallChanged()
+void DeviceInterface::onRingingChanged()
 {
+#ifdef MER_EDITION_SAILFISH
+    qDebug() << Q_FUNC_INFO << m_voiceCallController.ringing();
 
-    qDebug() << "onActiveVoiceCallChanged";
-
-    VoiceCallHandler* handler = m_voiceCallManager->activeVoiceCall();
-    if (handler) {
-        connect(handler, SIGNAL(statusChanged()), SLOT(onActiveVoiceCallStatusChanged()));
-        connect(handler, SIGNAL(destroyed()), SLOT(onActiveVoiceCallStatusChanged()));
-        connect(miBandService(), &MiBandService::declineCall, handler, &VoiceCallHandler::hangup, Qt::UniqueConnection);
-        connect(miBandService(), &MiBandService::ignoreCall, m_voiceCallManager, &VoiceCallManager::silenceRingtone, Qt::UniqueConnection);
-
-
-        if (handler->status()) onActiveVoiceCallStatusChanged();
-    }
-}
-
-void DeviceInterface::onActiveVoiceCallStatusChanged()
-{
-    qDebug() << "onActiveVoiceCallStatusChanged";
-
-    VoiceCallHandler* handler = m_voiceCallManager->activeVoiceCall();
-
-    if (!handler || handler->handlerId().isNull() || !m_device) {
+    if (!m_device) {
         return;
     }
 
-    switch ((VoiceCallHandler::VoiceCallStatus)handler->status()) {
-    case VoiceCallHandler::STATUS_ALERTING:
-    case VoiceCallHandler::STATUS_DIALING:
-        qDebug() << "Tell outgoing:" << handler->lineId();
-        //emit outgoingCall(handlerId, handler->lineId(), m_voiceCallManager->findPersonByNumber(handler->lineId()));
-        break;
-    case VoiceCallHandler::STATUS_INCOMING:
-    case VoiceCallHandler::STATUS_WAITING:
-        qDebug() << "Tell incoming:" << handler->lineId();
-        if(handler->getState() < VoiceCallHandler::StateRinging) {
-            handler->setState(VoiceCallHandler::StateRinging);
-            m_device->incomingCall(m_voiceCallManager->findPersonByNumber(handler->lineId()));
+    if (m_voiceCallController.ringing()) {
+        m_device->incomingCall(m_voiceCallController.findPersonByNumber(m_voiceCallController.callerId()));
+    } else {
+        if (m_device->service("00001802-0000-1000-8000-00805f9b34fb")){
+            m_device->service("00001802-0000-1000-8000-00805f9b34fb")->writeValue("00002a06-0000-1000-8000-00805f9b34fb", QByteArray(1, 0x00)); //TODO properly abstract immediate notification service
         }
-        break;
-    case VoiceCallHandler::STATUS_NULL:
-    case VoiceCallHandler::STATUS_DISCONNECTED:
-        qDebug() << "Endphone " << handler->handlerId();
-        if(handler->getState() < VoiceCallHandler::StateCleanedUp) {
-            handler->setState(VoiceCallHandler::StateCleanedUp);
-            if (m_device->service("00001802-0000-1000-8000-00805f9b34fb")){
-                m_device->service("00001802-0000-1000-8000-00805f9b34fb")->writeValue("00002a06-0000-1000-8000-00805f9b34fb", QByteArray(1, 0x00)); //TODO properly abstract immediate notification service
-            }
-        }
-        break;
-    case VoiceCallHandler::STATUS_ACTIVE:
-        qDebug() << "Startphone" << handler->handlerId();
-        if(handler->getState() < VoiceCallHandler::StateAnswered) {
-            handler->setState(VoiceCallHandler::StateAnswered);
-            if (m_device->service("00001802-0000-1000-8000-00805f9b34fb")){
-                m_device->service("00001802-0000-1000-8000-00805f9b34fb")->writeValue("00002a06-0000-1000-8000-00805f9b34fb", QByteArray(1, 0x00)); //TODO properly abstract immediate notification service
-            }        }
-        break;
-    case VoiceCallHandler::STATUS_HELD:
-        qDebug() << "OnHold" << handler->handlerId();
-        break;
     }
+#endif
 }
 
 void DeviceInterface::createTables()
@@ -293,7 +245,7 @@ void DeviceInterface::createTables()
         t_summary->addField(f = new KDbField("end_timestamp_dt", KDbField::DateTime));
         f->setCaption("End Timestamp in Date/Time format");
 
-        t_summary->addField(f = new KDbField("kind", KDbField::Integer, nullptr, KDbField::Unsigned));
+        t_summary->addField(f = new KDbField("kind", KDbField::Integer, KDbField::NoConstraints, KDbField::Unsigned));
         f->setCaption("Activity Kind");
 
         t_summary->addField(f = new KDbField("base_longitude", KDbField::Double));
@@ -303,9 +255,9 @@ void DeviceInterface::createTables()
         t_summary->addField(f = new KDbField("base_altitude", KDbField::Double));
         f->setCaption("Base Altitude");
 
-        t_summary->addField(f = new KDbField("device_id", KDbField::Integer, nullptr, KDbField::Unsigned));
+        t_summary->addField(f = new KDbField("device_id", KDbField::Integer, KDbField::NoConstraints, KDbField::Unsigned));
         f->setCaption("Device ID");
-        t_summary->addField(f = new KDbField("user_id", KDbField::Integer, nullptr, KDbField::Unsigned));
+        t_summary->addField(f = new KDbField("user_id", KDbField::Integer, KDbField::NoConstraints, KDbField::Unsigned));
         f->setCaption("User ID");
 
         t_summary->addField(f = new KDbField("gpx", KDbField::LongText));
@@ -317,6 +269,32 @@ void DeviceInterface::createTables()
         }
         qDebug() << "-- sports_data created --";
         qDebug() << *t_summary;
+    }
+
+    if (!m_conn->containsTable("sports_meta")) {
+        KDbTableSchema *t_meta = new KDbTableSchema("sports_meta");
+        t_meta->setCaption("Sports Meta-Data");
+        t_meta->addField(f = new KDbField("id", KDbField::Integer, KDbField::PrimaryKey | KDbField::AutoInc, KDbField::Unsigned));
+        f->setCaption("ID");
+
+        t_meta->addField(f = new KDbField("sport_id", KDbField::Integer, KDbField::NoConstraints, KDbField::Unsigned));
+        f->setCaption("Sport ID");
+
+        t_meta->addField(f = new KDbField("key", KDbField::Text));
+        f->setCaption("Key");
+
+        t_meta->addField(f = new KDbField("value", KDbField::Text));
+        f->setCaption("Value");
+
+        t_meta->addField(f = new KDbField("unit", KDbField::Text));
+        f->setCaption("Unit");
+
+        if (!m_conn->createTable(t_meta)) {
+            qDebug() << m_conn->result();
+            return;
+        }
+        qDebug() << "-- sports_meta created --";
+        qDebug() << *t_meta;
     }
 
     if (!m_conn->commitTransaction(t)) {
@@ -402,15 +380,12 @@ void DeviceInterface::onConnectionStateChanged()
         if (hrmService()) {
             m_dbusHRM->setHRMService(hrmService());
         }
-        if (AmazfishConfig::instance()->appNotifyConnect()) {
+        if (AmazfishConfig::instance()->appNotifyConnect() && m_notificationBuffer.isEmpty()) {
             sendAlert(tr("Amazfish"), tr("Connected"), tr("Phone and watch are connected"), true);
         }
 
         sendBufferedNotifications();
         updateCalendar();
-
-        //TODO this enables music controls
-        miBandService()->writeChunked(MiBandService::UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER, 3, QByteArray("\x01\x00\x01\x00\x00\x00\x01\x00", 8));
     } else {
         //Terminate running operations
         m_device->abortOperations();
@@ -420,7 +395,7 @@ void DeviceInterface::onConnectionStateChanged()
 
 void DeviceInterface::slot_informationChanged(AbstractDevice::Info key, const QString &val)
 {
-    qDebug() << "slot_informationChanged" << key << val;
+    qDebug() << Q_FUNC_INFO << key << val;
 
     //Handle notification of low battery
     if (key == AbstractDevice::INFO_BATTERY) {
@@ -435,14 +410,71 @@ void DeviceInterface::slot_informationChanged(AbstractDevice::Info key, const QS
     emit informationChanged(key, val);
 }
 
+void DeviceInterface::musicChanged()
+{
+    qDebug() << Q_FUNC_INFO;
+    if (m_device) {
+        m_device->setMusicStatus(m_musicController.status() == watchfish::MusicController::StatusPlaying, m_musicController.title(), m_musicController.artist(), m_musicController.album());
+    }
+}
+
+void DeviceInterface::deviceEvent(AbstractDevice::Events event)
+{
+    qDebug() << Q_FUNC_INFO << event;
+    switch(event) {
+    case AbstractDevice::EVENT_MUSIC_STOP:
+        m_musicController.pause();
+        break;
+    case AbstractDevice::EVENT_MUSIC_PLAY:
+        m_musicController.play();
+        break;
+    case AbstractDevice::EVENT_MUSIC_PAUSE:
+        m_musicController.pause();
+        break;
+    case AbstractDevice::EVENT_MUSIC_NEXT:
+        m_musicController.next();
+        break;
+    case AbstractDevice::EVENT_MUSIC_PREV:
+        m_musicController.previous();
+        break;
+    case AbstractDevice::EVENT_MUSIC_VOLUP:
+        m_musicController.volumeUp();
+        break;
+    case AbstractDevice::EVENT_MUSIC_VOLDOWN:
+        m_musicController.volumeDown();
+        break;
+    case AbstractDevice::EVENT_APP_MUSIC:
+        musicChanged();
+        break;
+#ifdef MER_EDITION_SAILFISH
+    case AbstractDevice::EVENT_IGNORE_CALL:
+        m_voiceCallController.silence();
+        break;
+    case AbstractDevice::EVENT_DECLINE_CALL:
+        m_voiceCallController.hangup();
+        break;
+#endif
+    }
+}
+
+void DeviceInterface::handleButtonPressed(int presses)
+{
+    if (presses == 2) {
+        m_musicController.next();
+    } else if (presses == 3) {
+        m_musicController.previous();
+    }
+    emit buttonPressed(presses);
+}
+
 void DeviceInterface::sendBufferedNotifications()
 {
-    qDebug() << "Sending buffered notifications";
+    qDebug() << Q_FUNC_INFO;
     while (m_notificationBuffer.count() > 0) {
-        WatchNotification n = m_notificationBuffer.dequeue();
+        watchfish::Notification *n = m_notificationBuffer.dequeue();
         if (m_device->supportsFeature(AbstractDevice::FEATURE_ALERT)){
             qDebug() << "Sending notification";
-            sendAlert(n.appName, n.summary, n.body);
+            sendAlert(n->appName(), n->summary(), n->body());
         }
     }
 }
@@ -501,8 +533,8 @@ void DeviceInterface::downloadActivityData()
 
 void DeviceInterface::sendWeather(CurrentWeather *weather)
 {
-    if (miBandService()) {
-        miBandService()->sendWeather(weather);
+    if (m_device) {
+        m_device->sendWeather(weather);
     }
 }
 
@@ -536,6 +568,8 @@ QString DeviceInterface::information(int i)
 
 void DeviceInterface::sendAlert(const QString &sender, const QString &subject, const QString &message, bool allowDuplicate)
 {
+    qDebug() << Q_FUNC_INFO;
+
     int hash = qHash(sender + subject + message);
     if (hash == m_lastAlertHash && !allowDuplicate) {
         qDebug() << "Discarded duplicate alert";
@@ -543,7 +577,10 @@ void DeviceInterface::sendAlert(const QString &sender, const QString &subject, c
     }
     m_lastAlertHash = hash;
 
-    notificationReceived(sender, subject, message);
+    if (m_device && m_device->connectionState() == "authenticated" && m_device->supportsFeature(AbstractDevice::FEATURE_ALERT)){
+        qDebug() << "Sending alert to device";
+        m_device->sendAlert(sender, subject, message);
+    }
 }
 
 void DeviceInterface::incomingCall(const QString &caller)
@@ -634,15 +671,31 @@ void DeviceInterface::updateCalendar()
 {
     if (supportsFeature(AbstractDevice::FEATURE_EVENT_REMINDER)) {
         if (m_device) {
-            QList<CalendarReader::EventData> eventlist = m_calendarReader.getEvents();
+            QList<watchfish::CalendarEvent> eventlist = m_calendarSource.fetchEvents(QDate::currentDate(), QDate::currentDate().addDays(14), true);
 
             int id=0;
-            foreach (CalendarReader::EventData event, eventlist) {
-                qDebug() << event.uniqueId << event.displayLabel << event.description << event.startTime;
-                m_device->sendEventReminder(id, event.startTime, event.displayLabel);
+            foreach (watchfish::CalendarEvent event, eventlist) {
+                qDebug() << event.uid() << event.title() << event.start();
+                m_device->sendEventReminder(id, event.start(), event.title());
                 id++;
             }
         }
+    }
+}
+
+void DeviceInterface::reloadCities()
+{
+    m_cityManager.loadCities();
+    if (m_cityManager.cities().count() > 0) {
+        m_currentWeather.setCity(qobject_cast<City*>(m_cityManager.cities()[0]));
+    }
+}
+
+void DeviceInterface::enableFeature(int feature)
+{
+    qDebug() << Q_FUNC_INFO << feature;
+    if (m_device) {
+        m_device->enableFeature(AbstractDevice::Feature(feature));
     }
 }
 

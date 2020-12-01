@@ -24,13 +24,13 @@ public:
     static const char* UUID_SERVICE_MIBAND2;
     static const char* UUID_CHARACTERISITIC_MIBAND2_AUTH;
 
-    const char AUTH_SEND_KEY = 0x01;
-    const char AUTH_REQUEST_RANDOM_AUTH_NUMBER = 0x02;
-    const char AUTH_SEND_ENCRYPTED_AUTH_NUMBER = 0x03;
-    const char RESPONSE = 0x10;
-    const char SUCCESS = 0x01;
-    const char FAIL = 0x04;
-    const char AUTH_BYTE = 0x00; //0x08;
+    const uint8_t AUTH_SEND_KEY = 0x01;
+    const uint8_t AUTH_REQUEST_RANDOM_AUTH_NUMBER = 0x02;
+    const uint8_t AUTH_SEND_ENCRYPTED_AUTH_NUMBER = 0x03;
+    const uint8_t RESPONSE = 0x10;
+    const uint8_t SUCCESS = 0x01;
+    const uint8_t FAIL = 0x04;
+    const uint8_t AUTH_BYTE = 0x00; //0x08;
     const QByteArray AUTH_SECRET_KEY = "0123456789@ABCDE";
 
     void initialise(bool firstTime);
@@ -46,8 +46,8 @@ private:
     QByteArray getSecretKey();
     QByteArray requestAuthNumber();
 
-    char m_authByte = 0x08; //0x08 = Bip, 0x00 = GTS
-    char m_cryptByte = 0x00; //0x00 = Bip, 0x80 = GTS/BipLite
+    uint8_t m_authByte = 0x08; //0x08 = Bip, 0x00 = GTS
+    uint8_t m_cryptByte = 0x00; //0x00 = Bip, 0x80 = GTS/BipLite
     bool m_requiresAuthKey = false;
 };
 

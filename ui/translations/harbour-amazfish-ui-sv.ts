@@ -66,7 +66,7 @@
     <name>AuthKeyDialog</name>
     <message>
         <source>Enter auth key</source>
-        <translation type="unfinished"></translation>
+        <translation>Ange autentiseringsnyckel</translation>
     </message>
 </context>
 <context>
@@ -104,7 +104,7 @@
     <name>DaemonInterface</name>
     <message>
         <source>Unexpected error</source>
-        <translation type="unfinished"></translation>
+        <translation>Oväntat fel</translation>
     </message>
 </context>
 <context>
@@ -112,10 +112,6 @@
     <message>
         <source>Refresh</source>
         <translation>Uppdatera</translation>
-    </message>
-    <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
     </message>
     <message>
         <source>Address: </source>
@@ -178,19 +174,39 @@
         <translation>Uppdatera kalender</translation>
     </message>
     <message>
-        <source>Informations</source>
-        <translation>Information</translation>
+        <source>Model: </source>
+        <translation>Modell: </translation>
     </message>
     <message>
-        <source>function tests</source>
-        <translation>Funktionstest</translation>
+        <source>Firmware Rev: </source>
+        <translation>Mjukvara: </translation>
+    </message>
+    <message>
+        <source>Manufacturer: </source>
+        <translation>Tillverkare: </translation>
+    </message>
+    <message>
+        <source>Music Control</source>
+        <translation>Musikkontroll</translation>
+    </message>
+    <message>
+        <source>Debugging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Function Tests</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DownloadDataMenuItem</name>
     <message>
         <source>Download Data</source>
-        <translation type="unfinished">Ladda ner data</translation>
+        <translation>Ladda ner data</translation>
     </message>
 </context>
 <context>
@@ -216,27 +232,35 @@
         <translation>Anslut till klocka</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation>Starta tjänsten</translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation>Aktivera tjänsten</translation>
-    </message>
-    <message>
-        <source>Amazfish</source>
-        <translation>Amazfish</translation>
-    </message>
-    <message>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%</translation>
     </message>
     <message>
         <source>%1 bpm</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bpm</translation>
     </message>
     <message>
         <source>Data Graphs</source>
+        <translation>Datadiagram</translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation type="unfinished">Steg</translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation type="unfinished">Hjärtfrekvens</translation>
+    </message>
+    <message>
+        <source>Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished">Starta</translation>
+    </message>
+    <message>
+        <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -251,35 +275,70 @@
     <name>HeartratePage</name>
     <message>
         <source>Heartrate</source>
-        <translation type="unfinished">Hjärtfrekvens</translation>
+        <translation>Hjärtfrekvens</translation>
     </message>
     <message>
         <source>BPM</source>
-        <translation type="unfinished"></translation>
+        <translation>BPM</translation>
     </message>
     <message>
         <source>Relaxed</source>
-        <translation type="unfinished"></translation>
+        <translation>Vila</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Lätt</translation>
     </message>
     <message>
         <source>Intensive</source>
-        <translation type="unfinished"></translation>
+        <translation>Intensiv</translation>
     </message>
     <message>
         <source>Aerobic</source>
-        <translation type="unfinished"></translation>
+        <translation>Aerobisk</translation>
     </message>
     <message>
         <source>Anerobic</source>
-        <translation type="unfinished"></translation>
+        <translation>Anerobisk</translation>
     </message>
     <message>
         <source>VO2 Max</source>
-        <translation type="unfinished"></translation>
+        <translation>VO2 max</translation>
+    </message>
+</context>
+<context>
+    <name>JSTools</name>
+    <message>
+        <source>Empty</source>
+        <translation>Tom</translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation>Hjärtfrekvens</translation>
+    </message>
+    <message>
+        <source>Pace</source>
+        <translation>Tempo</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation>Hastighet</translation>
+    </message>
+    <message>
+        <source>Altitude</source>
+        <translation>Höjd</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation>Distans</translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation>Paus</translation>
+    </message>
+    <message>
+        <source>Duration</source>
+        <translation>Varaktighet</translation>
     </message>
 </context>
 <context>
@@ -290,27 +349,23 @@
     </message>
     <message>
         <source>Stop scanning</source>
-        <translation type="unfinished"></translation>
+        <translation>Stoppa sökning</translation>
     </message>
     <message>
         <source>Scan for devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Sök efter enheter</translation>
     </message>
     <message>
         <source>Scanning for devices…</source>
-        <translation type="unfinished"></translation>
+        <translation>Söker efter enheter...</translation>
     </message>
     <message>
         <source>Pairing…</source>
-        <translation type="unfinished"></translation>
+        <translation>Parkopplar...</translation>
     </message>
     <message>
         <source>No devices found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to scan for devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Inga enheter hittades</translation>
     </message>
 </context>
 <context>
@@ -318,6 +373,21 @@
     <message>
         <source>Select Device Type</source>
         <translation>Välj enhetstyp</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>%1s</source>
+        <translation>%1s</translation>
+    </message>
+    <message>
+        <source>%1m %2s</source>
+        <translation>%1m %2s</translation>
+    </message>
+    <message>
+        <source>%1h %2m %3s</source>
+        <translation>%1t %2m %3s</translation>
     </message>
 </context>
 <context>
@@ -408,6 +478,10 @@
     <message>
         <source>Stop</source>
         <translation>Stoppa</translation>
+    </message>
+    <message>
+        <source>Amazfish Service</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -691,20 +765,191 @@
     <message>
         <source>h:mm</source>
         <extracomment>Format of sleep hours</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>h:mm</translation>
     </message>
     <message>
         <source>Deep %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Djup %1</translation>
     </message>
     <message>
         <source>MM/dd</source>
         <extracomment>Format for day on the sleep summary graph</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>dd/MM</translation>
     </message>
     <message>
         <source>Hours</source>
-        <translation type="unfinished"></translation>
+        <translation>Timmar</translation>
+    </message>
+</context>
+<context>
+    <name>SportPage</name>
+    <message>
+        <source>Data:</source>
+        <translation>Data:</translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation>Steg</translation>
+    </message>
+    <message>
+        <source>Active Seconds</source>
+        <translation>Aktiva sekunder</translation>
+    </message>
+    <message>
+        <source>Calories</source>
+        <translation>Kalorier</translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation>Distans</translation>
+    </message>
+    <message>
+        <source>Ascent</source>
+        <translation>Uppför</translation>
+    </message>
+    <message>
+        <source>Descent</source>
+        <translation>Utför</translation>
+    </message>
+    <message>
+        <source>Max Altitude</source>
+        <translation>Max höjd</translation>
+    </message>
+    <message>
+        <source>Min Altitude</source>
+        <translation>Min höjd</translation>
+    </message>
+    <message>
+        <source>Min Pace</source>
+        <translation>Min tempo</translation>
+    </message>
+    <message>
+        <source>Max Pace</source>
+        <translation>Max tempo</translation>
+    </message>
+    <message>
+        <source>Average HR</source>
+        <translation>HF genomsnitt</translation>
+    </message>
+    <message>
+        <source>Average Pace</source>
+        <translation>Tempo genomsnitt</translation>
+    </message>
+    <message>
+        <source>Average Stride</source>
+        <translation>Genomsnitt steg</translation>
+    </message>
+    <message>
+        <source>Max HR</source>
+        <translation>Max HF</translation>
+    </message>
+    <message>
+        <source>Time Ascending</source>
+        <translation>Tid uppför</translation>
+    </message>
+    <message>
+        <source>Time Descending</source>
+        <translation>Tid utför</translation>
+    </message>
+    <message>
+        <source>Time Flat</source>
+        <translation>Tid slätt</translation>
+    </message>
+    <message>
+        <source>Average Stroke</source>
+        <translation>Genomsnitt slag</translation>
+    </message>
+    <message>
+        <source>Average Stroke/s</source>
+        <translation>Genomsnitt slag/s</translation>
+    </message>
+    <message>
+        <source>Average Lap Pace</source>
+        <translation>Genomsnitt varvtempo</translation>
+    </message>
+    <message>
+        <source>Strokes</source>
+        <translation>Slag</translation>
+    </message>
+    <message>
+        <source>SWOLF Index</source>
+        <translation>SWOLF Index</translation>
+    </message>
+    <message>
+        <source>Swim Style</source>
+        <translation>Simstil</translation>
+    </message>
+    <message>
+        <source>Laps</source>
+        <translation>Varv</translation>
+    </message>
+    <message>
+        <source>Max Latitude</source>
+        <translation>Max latitud</translation>
+    </message>
+    <message>
+        <source>Min Latitude</source>
+        <translation>Min latitud</translation>
+    </message>
+    <message>
+        <source>Max Longitude</source>
+        <translation>Max longitud</translation>
+    </message>
+    <message>
+        <source>Min Longitude</source>
+        <translation>Min longitud</translation>
+    </message>
+    <message>
+        <source>Max Speed</source>
+        <translation>Max hastighet</translation>
+    </message>
+    <message>
+        <source>Total Stride</source>
+        <translation>Totalt steg</translation>
+    </message>
+    <message>
+        <source>steps</source>
+        <translation>steg</translation>
+    </message>
+    <message>
+        <source>seconds</source>
+        <translation>sekunder</translation>
+    </message>
+    <message>
+        <source>kcal</source>
+        <translation>kcal</translation>
+    </message>
+    <message>
+        <source>meters</source>
+        <translation>meter</translation>
+    </message>
+    <message>
+        <source>seconds/m</source>
+        <translation>sekunder/m</translation>
+    </message>
+    <message>
+        <source>bpm</source>
+        <translation>bpm</translation>
+    </message>
+    <message>
+        <source>seconds/km</source>
+        <translation>sekunder/km</translation>
+    </message>
+    <message>
+        <source>cm</source>
+        <translation>cm</translation>
+    </message>
+    <message>
+        <source>strokes/s</source>
+        <translation>slag/s</translation>
+    </message>
+    <message>
+        <source>strokes</source>
+        <translation>slag</translation>
+    </message>
+    <message>
+        <source>swolf</source>
+        <translation>swolf</translation>
     </message>
 </context>
 <context>
@@ -729,11 +974,11 @@
     <name>UnpairDeviceDialog</name>
     <message>
         <source>Unpair</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort parkoppling</translation>
     </message>
     <message>
         <source>Before proceeding you need to unpair your current device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Innan du fortsätter måste du ta bort parkopplingen från aktuell enhet.</translation>
     </message>
 </context>
 </TS>

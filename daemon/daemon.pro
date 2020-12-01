@@ -12,13 +12,26 @@
 # The name of your application
 TARGET = harbour-amazfishd
 
-CONFIG += sailfishapp
 LIBS += -Lqble/qble -L$$OUT_PWD/../lib -lamazfish -lz
 
-QT +=  contacts positioning KDb3
+QT +=  positioning KDb3 network
 
-PKGCONFIG += mlite5
-PKGCONFIG += libmkcal-qt5 libkcalcoren-qt5
+exists("/usr/lib/qt5/qml/Sailfish/Silica/SilicaGridView.qml"): {
+    message(SailfishOS daemon build)
+    DEFINES += MER_EDITION_SAILFISH
+
+    CONFIG += sailfishapp
+    PKGCONFIG += mlite5
+    WATCHFISH_FEATURES += music \
+                      voicecall \
+                      notificationmonitor \
+                      calendar
+} else {
+WATCHFISH_FEATURES += music \
+                  notificationmonitor \
+                  calendar
+}
+
 INCLUDEPATH += /usr/include/mkcal-qt5 /usr/include/kcalcoren-qt5
 
 INCLUDEPATH += $$PWD/src/services/ \
@@ -39,23 +52,22 @@ INSTALLS += target \
             systemd_services \
             privilege
 
-
+include(libwatchfish/libwatchfish.pri)
 include(../qble/qble.pri)
 
 SOURCES += \
-    src/calendarreader.cpp \
     src/devices/abstractfirmwareinfo.cpp \
     src/devices/biplitedevice.cpp \
     src/devices/biplitefirmwareinfo.cpp \
     src/devices/gtsdevice.cpp \
     src/devices/gtsfirmwareinfo.cpp \
+    src/devices/pinetimejfdevice.cpp \
     src/operations/updatefirmwareoperationnew.cpp \
     src/qaesencryption.cpp \
-    src/voicecallhandler.cpp \
-    src/voicecallmanager.cpp \
+    src/services/currenttimeservice.cpp \
+    src/services/pinetimemusicservice.cpp \
     src/typeconversion.cpp \
     src/bipbatteryinfo.cpp \
-    src/notificationslistener.cpp \
     src/devicefactory.cpp \
     src/services/mibandservice.cpp \
     src/services/miband2service.cpp \
@@ -81,10 +93,7 @@ SOURCES += \
     src/bipactivitydetailparser.cpp \
     src/activitycoordinate.cpp \
     src/harbour-amazfish-daemon.cpp \
-    src/weather/city.cpp \
-    src/weather/citymanager.cpp \
-    src/weather/currentweather.cpp \
-    src/weather/huamiweathercondition.cpp
+    src/huamiweathercondition.cpp
 
 DISTFILES += \
     harbour-amazfish.service \
@@ -93,21 +102,19 @@ DISTFILES += \
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
 HEADERS += \
-    src/calendarreader.h \
     src/devices/abstractfirmwareinfo.h \
     src/devices/biplitedevice.h \
     src/devices/biplitefirmwareinfo.h \
     src/devices/gtsdevice.h \
     src/devices/gtsfirmwareinfo.h \
+    src/devices/pinetimejfdevice.h \
     src/operations/updatefirmwareoperationnew.h \
     src/qaesencryption.h \
-    src/notificationslistener.h \
-    src/voicecallhandler.h \
-    src/voicecallmanager.h \
+    src/services/currenttimeservice.h \
+    src/services/pinetimemusicservice.h \
     src/typeconversion.h \
     src/bipbatteryinfo.h \
     src/deviceinterface.h \
-    src/datasource.h \
     src/activitykind.h \
     src/devices/bipfirmwareinfo.h \
     src/dbushrm.h \
@@ -130,11 +137,4 @@ HEADERS += \
     src/devices/abstractdevice.h \
     src/devices/bipdevice.h \
     src/bipactivitydetailparser.h \
-    src/activitycoordinate.h \
-    src/sportsdatamodel.h \
-    src/weather/city.h \
-    src/weather/citymanager.h \
-    src/weather/citysearchmodel.h \
-    src/weather/currentweather.h \
-    src/weather/huamiweathercondition.h
-
+    src/activitycoordinate.h

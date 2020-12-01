@@ -1,13 +1,17 @@
 import QtQuick 2.0
-import Sailfish.Silica 1.0
 import QtBluetooth 5.2
 import QtQml.Models 2.2
 import uk.co.piggz.amazfish 1.0
+import "../components"
+import "../components/platform"
 
-Page {
+PageListPL {
     id: page
-    allowedOrientations: Orientation.Portrait
-    backNavigation: !DaemonInterfaceInstance.pairing
+    //backNavigation: !DaemonInterfaceInstance.pairing
+    title: qsTr("Pair Device")
+
+    placeholderText: _placeholderText || qsTr("No devices found")
+    placeholderEnabled: discoveryModel.rowCount() > 0
 
     property string deviceType
     property string _placeholderText
@@ -20,7 +24,7 @@ Page {
                 // Set values from the signal
                 AmazfishConfig.pairedAddress = address
                 AmazfishConfig.pairedName = name
-                pageStack.pop(previousPage(previousPage()))
+                app.pages.pop(app.rootPage);
             } else {
                 _placeholderText = error
             }
@@ -57,9 +61,9 @@ Page {
             }
         }
 
-        delegate: ListItem {
+        delegate: ListItemPL {
             id: listItem
-            contentHeight: Theme.itemSizeMedium
+            contentHeight: styler.themeItemSizeLarge
             onClicked: {
                 AmazfishConfig.pairedAddress = ""
                 AmazfishConfig.pairedName = ""
@@ -71,84 +75,68 @@ Page {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    margins: Theme.horizontalPageMargin
+                    margins: styler.themeHorizontalPageMargin
                     verticalCenter: parent.verticalCenter
                 }
-                height: nameLabel.height + addressLabel.height + Theme.paddingSmall
+                height: nameLabel.height + addressLabel.height + styler.themePaddingSmall
 
-                Label {
+                LabelPL {
                     id: nameLabel
-                    truncationMode: TruncationMode.Fade
+                    //truncationMode: TruncationMode.Fade
                     width: parent.width
                     text: model.deviceName
-                    color: listItem.pressed ? Theme.highlightColor : Theme.primaryColor
+                    color: listItem.pressed ? styler.themeHighlightColor : styler.themePrimaryColor
                 }
 
-                Label {
+                LabelPL {
                     id: addressLabel
                     anchors {
                         top: nameLabel.bottom
-                        topMargin: Theme.paddingSmall
+                        topMargin: styler.themePaddingSmall
                     }
-                    truncationMode: TruncationMode.Fade
+                    //truncationMode: TruncationMode.Fade
                     width: parent.width
                     text: model.remoteAddress
-                    font.pixelSize: Theme.fontSizeSmall
-                    color: listItem.pressed ? Theme.secondaryHighlightColor : Theme.secondaryColor
+                    //font.pixelSize: Theme.fontSizeSmall
+                    color: listItem.pressed ? styler.themeSecondaryHighlightColor : styler.themeSecondaryColor
                 }
             }
         }
     }
 
-    SilicaListView {
-        id: listView
-        anchors.fill: parent
+    // Set to undefined when pairing to show busy indicator only
+    model: !DaemonInterfaceInstance.pairing && !_placeholderText
+           ? delegateModel
+           : undefined
 
-        // Set to undefined when pairing to show busy indicator only
-        model: !DaemonInterfaceInstance.pairing && !_placeholderText
-               ? delegateModel
-               : undefined
 
-        header: PageHeader {
-            title: qsTr("Pair Device")
-            description: deviceType
-        }
+    pageMenu: PageMenuPL {
+        //busy: discoveryModel.running || DaemonInterfaceInstance.pairing
 
-        PullDownMenu {
-            busy: discoveryModel.running || DaemonInterfaceInstance.pairing
-
-            MenuItem {
-                enabled: !DaemonInterfaceInstance.pairing
-                text: discoveryModel.running
-                    ? qsTr("Stop scanning")
-                    : qsTr("Scan for devices")
-                onClicked: {
-                    _placeholderText = ""
-                    discoveryModel.running = !discoveryModel.running
-                }
-            }
-
-            MenuLabel {
-                visible: text
-                text: discoveryModel.running
-                    ? qsTr("Scanning for devices…")
-                    : DaemonInterfaceInstance.pairing
-                        ? qsTr("Pairing…")
-                        : ""
+        PageMenuItemPL {
+            enabled: !DaemonInterfaceInstance.pairing
+            text: discoveryModel.running
+                  ? qsTr("Stop scanning")
+                  : qsTr("Scan for devices")
+            onClicked: {
+                _placeholderText = ""
+                discoveryModel.running = !discoveryModel.running
             }
         }
 
-        BusyIndicator {
-            id: busyIndicator
-            anchors.centerIn: parent
-            size: BusyIndicatorSize.Large
-            running: (discoveryModel.running && !listView.count) || DaemonInterfaceInstance.pairing
+        PageMenuItemPL {
+            visible: text
+            text: discoveryModel.running
+                  ? qsTr("Scanning for devices…")
+                  : DaemonInterfaceInstance.pairing
+                    ? qsTr("Pairing…")
+                    : ""
         }
+    }
 
-        ViewPlaceholder {
-            enabled: !busyIndicator.running && !listView.count
-            text: _placeholderText || qsTr("No devices found")
-            hintText: qsTr("Pull down to scan for devices")
-        }
+    BusyIndicatorPL {
+        id: busyIndicator
+        running: (discoveryModel.running && !page.count) || DaemonInterfaceInstance.pairing
     }
 }
+

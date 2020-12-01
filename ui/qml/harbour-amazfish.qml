@@ -1,39 +1,41 @@
 import QtQuick 2.0
-import Sailfish.Silica 1.0
 import "pages"
-import Nemo.Notifications 1.0
-import org.nemomobile.mpris 1.0
+//import Nemo.Notifications 1.0
 import org.SfietKonstantin.weatherfish 1.0
-import org.nemomobile.dbus 2.0
+import Nemo.DBus 2.0
 import uk.co.piggz.amazfish 1.0
+import "./components/"
+import "./components/platform"
 
-ApplicationWindow
+ApplicationWindowPL
 {
     id: app
     initialPage: Component { FirstPage { } }
-    cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations: defaultAllowedOrientations
+    property var    rootPage: null
+    //cover: Qt.resolvedUrl("cover/CoverPage.qml")
+    //allowedOrientations: defaultAllowedOrientations
 
     property int _lastNotificationId: 0
     property bool serviceActiveState: false
     property bool serviceEnabledState: false
     property int supportedFeatures: 0
 
-    onStateChanged: {
-        console.log("State: " + state);
+    StylerPL {
+        id: styler
     }
+    TruncationModes { id: truncModes }
 
-    Notification {
-        id: notification
-        expireTimeout: 5000
-    }
+    //    Notification {
+    //        id: notification
+    //        expireTimeout: 5000
+    //    }
 
     function showMessage(msg)
     {
-        notification.replacesId = _lastNotificationId
-        notification.previewBody = msg
-        notification.publish()
-        _lastNotificationId = notification.replacesId
+        //        notification.replacesId = _lastNotificationId
+        //        notification.previewBody = msg
+        //        notification.publish()
+        //        _lastNotificationId = notification.replacesId
     }
 
     function supportsFeature(feature) {
@@ -41,19 +43,14 @@ ApplicationWindow
         return (supportedFeatures & feature) === feature;
     }
 
-    BusyIndicator {
-        size: BusyIndicatorSize.Large
+    BusyIndicatorPL {
         anchors.centerIn: parent
         visible: DaemonInterfaceInstance.operationRunning
         running: DaemonInterfaceInstance.operationRunning
     }
 
     CityManager {
-            id: cityManager
-    }
-
-    MprisManager {
-        id: mprisManager
+        id: cityManager
     }
     
     Connections {
@@ -61,20 +58,7 @@ ApplicationWindow
         onMessage: {
             showMessage(text);
         }
-
-        onButtonPressed: {
-            console.log("Button pressed:", presses);
-            
-            if (presses == 3 && mprisManager.canGoPrevious) {
-                mprisManager.previous();
-            }
-            
-            if (presses == 2 && mprisManager.canGoNext) {
-                mprisManager.next();
-            }
-        }
     }
-
 
     //SystemD Service
     Timer {
@@ -86,6 +70,18 @@ ApplicationWindow
             systemdServiceIface.updateProperties()
         }
     }
+
+    Timer {
+        id: tmrStartup
+        running: true
+        repeat: false
+        interval:300
+        onTriggered: {
+            app.pages.processCurrentItem();
+        }
+    }
+
+
 
     DBusInterface {
         id: systemdServiceIface
@@ -145,4 +141,30 @@ ApplicationWindow
     onSupportedFeaturesChanged: {
         console.log("Supported features:", supportedFeatures);
     }
+
+    function tr(message) {
+        return qsTr(message);
+        // Return translated message.
+        // In addition to the message, string formatting arguments can be passed
+        // as well as short-hand for message.arg(arg1).arg(arg2)...
+        //message = qsTranslate("", message);
+        //for (var i = 1; i < arguments.length; i++)
+        //    message = message.arg(arguments[i]);
+        //return message;
+    }
+
+    function pushAttached(pagefile, options) {
+        return app.pages.pushAttached(pagefile, options);
+    }
+
+    function createObject(page, options, parent) {
+        var pc = Qt.createComponent(page);
+        if (pc.status === Component.Error) {
+            console.log('Error while creating component');
+            console.log(pc.errorString());
+            return null;
+        }
+        return pc.createObject(parent ? parent : app, options ? options : {})
+    }
+
 }

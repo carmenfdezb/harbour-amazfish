@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
+#include <qble/qbleservice.h> //for macros
 
 class AbstractFirmwareInfo : public QObject
 {

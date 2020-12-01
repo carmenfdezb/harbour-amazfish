@@ -66,22 +66,22 @@
     <name>AuthKeyDialog</name>
     <message>
         <source>Enter auth key</source>
-        <translation type="unfinished"></translation>
+        <translation>Introduce clave</translation>
     </message>
 </context>
 <context>
     <name>BipFirmwarePage</name>
     <message>
         <source>Send file</source>
-        <translation>Enviar archivo</translation>
+        <translation>Enviar</translation>
     </message>
     <message>
         <source>Download File</source>
-        <translation>Descargar archivo</translation>
+        <translation>Enviar archivo</translation>
     </message>
     <message>
         <source>Select a file to download.</source>
-        <translation>Selecciona archivo a descargar.</translation>
+        <translation>Selecciona archivo para enviar.</translation>
     </message>
     <message>
         <source>None</source>
@@ -104,7 +104,7 @@
     <name>DaemonInterface</name>
     <message>
         <source>Unexpected error</source>
-        <translation type="unfinished"></translation>
+        <translation>Error inesperado</translation>
     </message>
 </context>
 <context>
@@ -112,10 +112,6 @@
     <message>
         <source>Refresh</source>
         <translation>Actualizar</translation>
-    </message>
-    <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
     </message>
     <message>
         <source>Address: </source>
@@ -155,7 +151,7 @@
     </message>
     <message>
         <source>Fetch debug log</source>
-        <translation>Obtener registro de depuración</translation>
+        <translation>Registro de depuración</translation>
     </message>
     <message>
         <source>Test Popup</source>
@@ -178,19 +174,39 @@
         <translation>Actualizar calendario</translation>
     </message>
     <message>
-        <source>Informations</source>
-        <translation>Datos</translation>
+        <source>Model: </source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>function tests</source>
-        <translation>Pruebas de funcionamiento</translation>
+        <source>Firmware Rev: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Music Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debugging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Function Tests</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>DownloadDataMenuItem</name>
     <message>
         <source>Download Data</source>
-        <translation type="unfinished">Descargar datos</translation>
+        <translation>Descargar datos</translation>
     </message>
 </context>
 <context>
@@ -201,7 +217,7 @@
     </message>
     <message>
         <source>Download File</source>
-        <translation>Descargar archivo</translation>
+        <translation>Enviar archivo</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -216,27 +232,35 @@
         <translation>Conectar reloj</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation>Iniciar servicio</translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation>Habilitar servicio</translation>
-    </message>
-    <message>
-        <source>Amazfish</source>
-        <translation>Amazfish</translation>
-    </message>
-    <message>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation>%1%</translation>
     </message>
     <message>
         <source>%1 bpm</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 bpm</translation>
     </message>
     <message>
         <source>Data Graphs</source>
+        <translation>Gráficos de datos</translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation type="unfinished">Pasos</translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation type="unfinished">Frecuencia cardiaca</translation>
+    </message>
+    <message>
+        <source>Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished">Iniciar</translation>
+    </message>
+    <message>
+        <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -251,34 +275,69 @@
     <name>HeartratePage</name>
     <message>
         <source>Heartrate</source>
-        <translation type="unfinished">Frecuencia cardiaca</translation>
+        <translation>Frecuencia cardiaca</translation>
     </message>
     <message>
         <source>BPM</source>
-        <translation type="unfinished"></translation>
+        <translation>BPM</translation>
     </message>
     <message>
         <source>Relaxed</source>
-        <translation type="unfinished"></translation>
+        <translation>Relajado</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Ligero</translation>
     </message>
     <message>
         <source>Intensive</source>
-        <translation type="unfinished"></translation>
+        <translation>Intensivo</translation>
     </message>
     <message>
         <source>Aerobic</source>
-        <translation type="unfinished"></translation>
+        <translation>Aeróbico</translation>
     </message>
     <message>
         <source>Anerobic</source>
-        <translation type="unfinished"></translation>
+        <translation>Anaeróbico</translation>
     </message>
     <message>
         <source>VO2 Max</source>
+        <translation>VO2 Máx</translation>
+    </message>
+</context>
+<context>
+    <name>JSTools</name>
+    <message>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation type="unfinished">Frecuencia cardiaca</translation>
+    </message>
+    <message>
+        <source>Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duration</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -290,27 +349,23 @@
     </message>
     <message>
         <source>Stop scanning</source>
-        <translation type="unfinished"></translation>
+        <translation>Detener búsqueda</translation>
     </message>
     <message>
         <source>Scan for devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscar dispositivos</translation>
     </message>
     <message>
         <source>Scanning for devices…</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscando dispositivos...</translation>
     </message>
     <message>
         <source>Pairing…</source>
-        <translation type="unfinished"></translation>
+        <translation>Vinculando...</translation>
     </message>
     <message>
         <source>No devices found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Pull down to scan for devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningún dispositivo encontrado</translation>
     </message>
 </context>
 <context>
@@ -318,6 +373,21 @@
     <message>
         <source>Select Device Type</source>
         <translation>Selecciona tipo de dispositivo</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>%1s</source>
+        <translation type="unfinished">%1% {1s?}</translation>
+    </message>
+    <message>
+        <source>%1m %2s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1h %2m %3s</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -408,6 +478,10 @@
     <message>
         <source>Stop</source>
         <translation>Detener</translation>
+    </message>
+    <message>
+        <source>Amazfish Service</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -678,7 +752,7 @@
     <name>SleepPage</name>
     <message>
         <source>Sleep Summary</source>
-        <translation>Resumen de sueño</translation>
+        <translation>Resumen del sueño</translation>
     </message>
     <message>
         <source>Sleep</source>
@@ -686,24 +760,195 @@
     </message>
     <message>
         <source>Note: last nights sleep is updated at mid-day</source>
-        <translation>Nota: el sueño de la noche anterior se actuliza a medio día</translation>
+        <translation>Nota: el sueño de la última noche se actualiza a medio día</translation>
     </message>
     <message>
         <source>h:mm</source>
         <extracomment>Format of sleep hours</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>h:mm</translation>
     </message>
     <message>
         <source>Deep %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Profundo %1</translation>
     </message>
     <message>
         <source>MM/dd</source>
         <extracomment>Format for day on the sleep summary graph</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>dd/MM</translation>
     </message>
     <message>
         <source>Hours</source>
+        <translation>Horas</translation>
+    </message>
+</context>
+<context>
+    <name>SportPage</name>
+    <message>
+        <source>Data:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation type="unfinished">Pasos</translation>
+    </message>
+    <message>
+        <source>Active Seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ascent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Descent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average HR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stride</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max HR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Ascending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Descending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stroke</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stroke/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Lap Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strokes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SWOLF Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swim Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Laps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Latitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Latitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total Stride</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kcal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds/m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bpm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds/km</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>cm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>strokes/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>strokes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>swolf</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -729,11 +974,11 @@
     <name>UnpairDeviceDialog</name>
     <message>
         <source>Unpair</source>
-        <translation type="unfinished"></translation>
+        <translation>Desvincular</translation>
     </message>
     <message>
         <source>Before proceeding you need to unpair your current device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Antes de continuar, debes desvincular tu dispositivo actual.</translation>
     </message>
 </context>
 </TS>

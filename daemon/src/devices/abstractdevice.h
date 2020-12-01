@@ -18,8 +18,8 @@ public:
         FEATURE_STEPS = 8,
         FEATURE_ALARMS = 16,
         FEATURE_ALERT = 32,
-        FEATURE_NOTIFIATION = 64,
-        FEATURE_EVENT_REMINDER = 128
+        FEATURE_EVENT_REMINDER = 64,
+        FEATURE_MUSIC_CONTROL = 128
     };
     Q_ENUM(Feature)
 
@@ -32,7 +32,10 @@ public:
         INFO_GPSVER,
         INFO_BATTERY,
         INFO_STEPS,
-        INFO_HEARTRATE
+        INFO_HEARTRATE,
+        INFO_MODEL,
+        INFO_FW_REVISION,
+        INFO_MANUFACTURER
     };
     Q_ENUM(Info)
 
@@ -53,7 +56,22 @@ public:
     };
     Q_ENUM(Settings)
 
-    explicit AbstractDevice(const QString &pairedName, QObject *parent = 0);
+    enum Events {
+        EVENT_MUSIC_STOP,
+        EVENT_MUSIC_PLAY,
+        EVENT_MUSIC_PAUSE,
+        EVENT_MUSIC_NEXT,
+        EVENT_MUSIC_PREV,
+        EVENT_MUSIC_VOLUP,
+        EVENT_MUSIC_VOLDOWN,
+        EVENT_APP_MUSIC,
+        EVENT_DECLINE_CALL,
+        EVENT_ANSWER_CALL,
+        EVENT_IGNORE_CALL
+    };
+    Q_ENUM(Events)
+
+    explicit AbstractDevice(const QString &pairedName, QObject *parent = nullptr);
     
     virtual QString pair() override;
     virtual void pairAsync() override;
@@ -84,6 +102,8 @@ public:
     virtual void sendAlert(const QString &sender, const QString &subject, const QString &message) = 0;
     virtual void incomingCall(const QString &caller) = 0;
     virtual void sendEventReminder(int id, const QDateTime &dt, const QString &event);
+    virtual void enableFeature(AbstractDevice::Feature feature);
+    virtual void setMusicStatus(bool playing, const QString &title, const QString &artist, const QString &album);
 
     //signals    
     Q_SIGNAL void message(const QString &text);
@@ -92,6 +112,7 @@ public:
     Q_SIGNAL void buttonPressed(int presses);
     Q_SIGNAL void connectionStateChanged();
     Q_SIGNAL void informationChanged(AbstractDevice::Info key, const QString& val);
+    Q_SIGNAL void deviceEvent(Events event);
 
 protected:
     bool m_needsAuth = false;

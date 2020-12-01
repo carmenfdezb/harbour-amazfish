@@ -81,7 +81,7 @@ class BipDevice : public AbstractDevice
 {
     Q_OBJECT
 public:
-    BipDevice(const QString &pairedName, QObject *parent = 0);
+    BipDevice(const QString &pairedName, QObject *parent = nullptr);
     
     static const char* UUID_SERVICE_ALERT_NOTIFICATION;
     static const char* UUID_SERVICE_MIBAND2;
@@ -112,12 +112,16 @@ public:
 
     Q_SLOT void authenticated(bool ready);
 
+    virtual void sendWeather(CurrentWeather *weather) override;
+
+    virtual int activitySampleSize();
 protected:
     virtual void onPropertiesChanged(QString interface, QVariantMap map, QStringList list);
     Q_SLOT void handleButtonPressed();
     Q_SLOT void buttonPressTimeout();
     Q_SLOT void stepsChanged();
     Q_SLOT void batteryInfoChanged();
+    int m_ActivitySampleSize = 4;
 
 private:
     void parseServices();
@@ -126,7 +130,7 @@ private:
     QString m_softwareRevision;
     int m_buttonPresses = 0;
     QTimer *m_keyPressTimer = nullptr;
-    QString pairedName;
+    Q_SLOT void serviceEvent(char event);
 };
 
 #endif // BIPDEVICE_H

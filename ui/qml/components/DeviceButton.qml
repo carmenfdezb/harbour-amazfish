@@ -1,22 +1,14 @@
 import QtQuick 2.0
-import Sailfish.Silica 1.0
+import "../components"
+import "../components/platform"
 
-ListItem {
+ListItemPL {
     id: item
-    width: parent.width
-    contentHeight: Theme.itemSizeHuge
+    contentHeight: styler.themeItemSizeLarge
+    signal selected(bool needsAuth, string deviceType)
 
     onClicked: {
-        var props = {deviceType: model.deviceType}
-
-        if (model.auth) {
-            pageStack.push(Qt.resolvedUrl("../pages/AuthKeyDialog.qml"), {
-                               acceptDestination: Qt.resolvedUrl("../pages/PairPage.qml"),
-                               acceptDestinationProperties: props
-                           })
-        } else {
-            pageStack.push(Qt.resolvedUrl("../pages/PairPage.qml"), props)
-        }
+        selected(model.auth, model.deviceType);
     }
 
     Image {
@@ -24,10 +16,10 @@ ListItem {
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
-            leftMargin: Theme.horizontalPageMargin
+            leftMargin: styler.themeHorizontalPageMargin
         }
-        height: Theme.iconSizeExtraLarge
-        width: Theme.iconSizeExtraLarge
+        height: parent.height
+        width: parent.height
         fillMode: Image.PreserveAspectFit
         source: model.icon
     }
@@ -37,12 +29,12 @@ ListItem {
         anchors {
             verticalCenter: parent.verticalCenter
             left: icon.right
-            leftMargin: Theme.paddingMedium
+            leftMargin: styler.themePaddingMedium
             right: parent.right
-            rightMargin: Theme.horizontalPageMargin
+            rightMargin: styler.themeHorizontalPageMargin
         }
-        font.pixelSize: Theme.fontSizeLarge
-        color: item.down ? Theme.highlightColor : Theme.primaryColor
+        font.pixelSize: styler.themeFontSizeLarge
+        color: item.down ? styler.themeHighlightColor : styler.themePrimaryColor
         text: model.deviceType
     }
 }

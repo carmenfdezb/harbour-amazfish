@@ -20,10 +20,10 @@ QString AbstractDevice::pair()
     m_autoreconnect = true;
     //disconnectFromDevice();
     setConnectionState("pairing");
-    emit connectionStateChanged();
 
     QBLEDevice::pair();
     QBLEDevice::connectToDevice();
+    return "pairing";
 }
 
 void AbstractDevice::pairAsync()
@@ -35,7 +35,6 @@ void AbstractDevice::pairAsync()
     m_autoreconnect = true;
     //disconnectFromDevice();
     setConnectionState("pairing");
-    emit connectionStateChanged();
 
     QBLEDevice::pairAsync();
 }
@@ -87,7 +86,7 @@ QString AbstractDevice::connectionState() const
 
 bool AbstractDevice::supportsFeature(AbstractDevice::Feature f)
 {
-    return supportedFeatures() & f == f;
+    return (supportedFeatures() & f) == f;
 }
 
 QString AbstractDevice::deviceName()
@@ -147,6 +146,19 @@ void AbstractDevice::sendEventReminder(int id, const QDateTime &dt, const QStrin
     Q_UNUSED(id);
     Q_UNUSED(dt);
     Q_UNUSED(event);
+}
+
+void AbstractDevice::enableFeature(AbstractDevice::Feature feature)
+{
+    Q_UNUSED(feature);
+}
+
+void AbstractDevice::setMusicStatus(bool playing, const QString &title, const QString &artist, const QString &album)
+{
+    Q_UNUSED(playing);
+    Q_UNUSED(title);
+    Q_UNUSED(artist);
+    Q_UNUSED(album);
 }
 
 void AbstractDevice::abortOperations()

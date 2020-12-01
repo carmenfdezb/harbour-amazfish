@@ -114,10 +114,6 @@
         <translation>Обновить</translation>
     </message>
     <message>
-        <source>AmazFish</source>
-        <translation>AmazFish</translation>
-    </message>
-    <message>
         <source>Address: </source>
         <translation>Адрес: </translation>
     </message>
@@ -178,11 +174,31 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Informations</source>
+        <source>Model: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>function tests</source>
+        <source>Firmware Rev: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Manufacturer: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Music Control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Debugging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Function Tests</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -216,18 +232,6 @@
         <translation>Подключить часы</translation>
     </message>
     <message>
-        <source>Start Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enable Service</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Amazfish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>%1%</source>
         <translation type="unfinished"></translation>
     </message>
@@ -237,6 +241,26 @@
     </message>
     <message>
         <source>Data Graphs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation type="unfinished">Шаги</translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation type="unfinished">ЧСС</translation>
+    </message>
+    <message>
+        <source>Service</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Start</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -283,6 +307,41 @@
     </message>
 </context>
 <context>
+    <name>JSTools</name>
+    <message>
+        <source>Empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Heartrate</source>
+        <translation type="unfinished">ЧСС</translation>
+    </message>
+    <message>
+        <source>Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>PairPage</name>
     <message>
         <source>Pair Device</source>
@@ -308,15 +367,26 @@
         <source>No devices found</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Pull down to scan for devices</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>PairSelectDeviceType</name>
     <message>
         <source>Select Device Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>%1s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1m %2s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1h %2m %3s</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -407,6 +477,10 @@
     </message>
     <message>
         <source>Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Amazfish Service</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -704,6 +778,177 @@
     </message>
     <message>
         <source>Hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SportPage</name>
+    <message>
+        <source>Data:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Steps</source>
+        <translation type="unfinished">Шаги</translation>
+    </message>
+    <message>
+        <source>Active Seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Calories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ascent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Descent</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Altitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average HR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stride</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max HR</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Ascending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Descending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Time Flat</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stroke</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Stroke/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Average Lap Pace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Strokes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>SWOLF Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Swim Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Laps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Latitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Latitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Min Longitude</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Total Stride</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>kcal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>meters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds/m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>bpm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>seconds/km</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>cm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>strokes/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>strokes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>swolf</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

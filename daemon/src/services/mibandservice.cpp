@@ -4,7 +4,7 @@
 
 #include "typeconversion.h"
 #include "bipdevice.h"
-#include "weather/huamiweathercondition.h"
+#include "huamiweathercondition.h"
 #include "amazfishconfig.h"
 
 const char* MiBandService::UUID_SERVICE_MIBAND = "0000fee0-0000-1000-8000-00805f9b34fb";
@@ -20,34 +20,34 @@ const char* MiBandService::UUID_CHARACTERISTIC_MIBAND_CURRENT_TIME = "00002a2b-0
 const char* MiBandService::UUID_CHARACTERISTIC_MIBAND_WEATHER = "0000000e-0000-3512-2118-0009af100700";
 const char* MiBandService::UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER = "00000020-0000-3512-2118-0009af100700";
 
-constexpr char MiBandService::DATEFORMAT_TIME[];
-constexpr char MiBandService::DATEFORMAT_DATETIME[];
-constexpr char MiBandService::DATEFORMAT_TIME_12_HOURS[];
-constexpr char MiBandService::DATEFORMAT_TIME_24_HOURS[];
-constexpr char MiBandService::COMMAND_ENABLE_DISPLAY_ON_LIFT_WRIST[];
-constexpr char MiBandService::COMMAND_DISABLE_DISPLAY_ON_LIFT_WRIST[];
-constexpr char MiBandService::COMMAND_SCHEDULE_DISPLAY_ON_LIFT_WRIST[];
-constexpr char MiBandService::COMMAND_ENABLE_GOAL_NOTIFICATION[];
-constexpr char MiBandService::COMMAND_DISABLE_GOAL_NOTIFICATION[];
-constexpr char MiBandService::COMMAND_ENABLE_ROTATE_WRIST_TO_SWITCH_INFO[];
-constexpr char MiBandService::COMMAND_DISABLE_ROTATE_WRIST_TO_SWITCH_INFO[];
-constexpr char MiBandService::COMMAND_ENABLE_DISPLAY_CALLER[];
-constexpr char MiBandService::COMMAND_DISABLE_DISPLAY_CALLER[];
-constexpr char MiBandService::COMMAND_DISTANCE_UNIT_METRIC[];
-constexpr char MiBandService::COMMAND_DISTANCE_UNIT_IMPERIAL[];
-constexpr char MiBandService::COMMAND_SET_FITNESS_GOAL_START[];
-constexpr char MiBandService::COMMAND_SET_FITNESS_GOAL_END[];
-constexpr char MiBandService::COMMAND_CHANGE_SCREENS[];
-constexpr char MiBandService::COMMAND_ENABLE_DISCONNECT_NOTIFICATION[];
-constexpr char MiBandService::COMMAND_DISABLE_DISCONNECT_NOTIFICATION[];
+constexpr uint8_t MiBandService::DATEFORMAT_TIME[];
+constexpr uint8_t MiBandService::DATEFORMAT_DATETIME[];
+constexpr uint8_t MiBandService::DATEFORMAT_TIME_12_HOURS[];
+constexpr uint8_t MiBandService::DATEFORMAT_TIME_24_HOURS[];
+constexpr uint8_t MiBandService::COMMAND_ENABLE_DISPLAY_ON_LIFT_WRIST[];
+constexpr uint8_t MiBandService::COMMAND_DISABLE_DISPLAY_ON_LIFT_WRIST[];
+constexpr uint8_t MiBandService::COMMAND_SCHEDULE_DISPLAY_ON_LIFT_WRIST[];
+constexpr uint8_t MiBandService::COMMAND_ENABLE_GOAL_NOTIFICATION[];
+constexpr uint8_t MiBandService::COMMAND_DISABLE_GOAL_NOTIFICATION[];
+constexpr uint8_t MiBandService::COMMAND_ENABLE_ROTATE_WRIST_TO_SWITCH_INFO[];
+constexpr uint8_t MiBandService::COMMAND_DISABLE_ROTATE_WRIST_TO_SWITCH_INFO[];
+constexpr uint8_t MiBandService::COMMAND_ENABLE_DISPLAY_CALLER[];
+constexpr uint8_t MiBandService::COMMAND_DISABLE_DISPLAY_CALLER[];
+constexpr uint8_t MiBandService::COMMAND_DISTANCE_UNIT_METRIC[];
+constexpr uint8_t MiBandService::COMMAND_DISTANCE_UNIT_IMPERIAL[];
+constexpr uint8_t MiBandService::COMMAND_SET_FITNESS_GOAL_START[];
+constexpr uint8_t MiBandService::COMMAND_SET_FITNESS_GOAL_END[];
+constexpr uint8_t MiBandService::COMMAND_CHANGE_SCREENS[];
+constexpr uint8_t MiBandService::COMMAND_ENABLE_DISCONNECT_NOTIFICATION[];
+constexpr uint8_t MiBandService::COMMAND_DISABLE_DISCONNECT_NOTIFICATION[];
 
-constexpr char MiBandService::DISPLAY_XXX[];
-constexpr char MiBandService::DISPLAY_YYY[];
-constexpr char MiBandService::WEAR_LOCATION_LEFT_WRIST[];
-constexpr char MiBandService::WEAR_LOCATION_RIGHT_WRIST[];
-constexpr char MiBandService::RESPONSE_ACTIVITY_DATA_START_DATE_SUCCESS[];
-constexpr char MiBandService::RESPONSE_FINISH_SUCCESS[];
-constexpr char MiBandService::RESPONSE_FINISH_FAIL[];
+constexpr uint8_t MiBandService::DISPLAY_XXX[];
+constexpr uint8_t MiBandService::DISPLAY_YYY[];
+constexpr uint8_t MiBandService::WEAR_LOCATION_LEFT_WRIST[];
+constexpr uint8_t MiBandService::WEAR_LOCATION_RIGHT_WRIST[];
+constexpr uint8_t MiBandService::RESPONSE_ACTIVITY_DATA_START_DATE_SUCCESS[];
+constexpr uint8_t MiBandService::RESPONSE_FINISH_SUCCESS[];
+constexpr uint8_t MiBandService::RESPONSE_FINISH_FAIL[];
 
 MiBandService::MiBandService(const QString &path, QObject *parent) : QBLEService(UUID_SERVICE_MIBAND, path, parent)
 {
@@ -66,11 +66,13 @@ void MiBandService::characteristicChanged(const QString &characteristic, const Q
 
     if (characteristic == UUID_CHARACTERISTIC_MIBAND_DEVICE_EVENT) {
         if (value[0] == EVENT_DECLINE_CALL) {
-            emit declineCall();
+            emit serviceEvent(EVENT_DECLINE_CALL);
         } else if (value[0] == EVENT_IGNORE_CALL) {
-            emit ignoreCall();
+            emit serviceEvent(EVENT_IGNORE_CALL);
         } else if (value[0] == EVENT_BUTTON) {
             emit buttonPressed();
+        } else if (value[0] == EVENT_MUSIC) {
+            emit serviceEvent(value[1]);
         } else {
             qDebug() << "device event " << value[0];
             if (value[0] == MTU_REQUEST) {
@@ -176,17 +178,13 @@ void MiBandService::decodeAlarms(const QByteArray &data)
 {
     //Smaple Data 03 17 80 00 02 05 20 01 12 03 04
 
-    bool alarmsInUse[10] = {false};
-    bool alarmsEnabled[10] = {false};
     int numAlarms = data.at(5);
     auto config = AmazfishConfig::instance();
 
     for (int i = 0; i < numAlarms; i++) {
         char alarm_data = data.at(6 + i);
         int index = alarm_data & 0xf;
-        alarmsInUse[index] = true;
         bool enabled = (alarm_data & 0x10) == 0x10;
-        alarmsEnabled[index] = enabled;
         qDebug() << "alarm " << index << " is enabled:" << enabled;
         config->setAlarmEnabled(i + 1, enabled);
     }
@@ -301,10 +299,10 @@ void MiBandService::setDateDisplay()
     qDebug() << "Setting date display to " << format;
     switch (format) {
     case AmazfishConfig::DeviceDateFormatTime:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(DATEFORMAT_TIME, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(DATEFORMAT_TIME));
         break;
     case AmazfishConfig::DeviceDateFormatDateTime:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(DATEFORMAT_DATETIME, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(DATEFORMAT_DATETIME));
         break;
     }
 
@@ -316,10 +314,10 @@ void MiBandService::setTimeFormat()
     qDebug() << "Setting time format to " << format;
     switch (format) {
     case AmazfishConfig::DeviceTimeFormat24H:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(DATEFORMAT_TIME_24_HOURS, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(DATEFORMAT_TIME_24_HOURS));
         break;
     case AmazfishConfig::DeviceTimeFormat12H:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(DATEFORMAT_TIME_12_HOURS, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(DATEFORMAT_TIME_12_HOURS));
         break;
     }
 }
@@ -371,10 +369,10 @@ void MiBandService::setDistanceUnit()
     qDebug() << "Setting distance unit to " << format;
     switch (format) {
     case AmazfishConfig::DeviceDistanceUnitMetric:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(COMMAND_DISTANCE_UNIT_METRIC, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(COMMAND_DISTANCE_UNIT_METRIC));
         break;
     case AmazfishConfig::DeviceDistanceUnitImperial:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(COMMAND_DISTANCE_UNIT_IMPERIAL, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(COMMAND_DISTANCE_UNIT_IMPERIAL));
         break;
     }
 
@@ -388,10 +386,10 @@ void MiBandService::setWearLocation()
     qDebug() << "Setting wear location to " << location;
     switch (location) {
     case AmazfishConfig::WearLocationLeftWrist:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_USER_SETTINGS, QByteArray(WEAR_LOCATION_LEFT_WRIST, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_USER_SETTINGS, UCHARARR_TO_BYTEARRAY(WEAR_LOCATION_LEFT_WRIST));
         break;
     case AmazfishConfig::WearLocationRightWrist:
-        writeValue(UUID_CHARACTERISTIC_MIBAND_USER_SETTINGS, QByteArray(WEAR_LOCATION_RIGHT_WRIST, 4));
+        writeValue(UUID_CHARACTERISTIC_MIBAND_USER_SETTINGS, UCHARARR_TO_BYTEARRAY(WEAR_LOCATION_RIGHT_WRIST));
         break;
     }
 }
@@ -400,9 +398,9 @@ void MiBandService::setFitnessGoal()
 {
     auto goal = AmazfishConfig::instance()->profileFitnessGoal();
 
-    QByteArray cmd = QByteArray(COMMAND_SET_FITNESS_GOAL_START, 3);
-    cmd += TypeConversion::fromInt24(goal);
-    cmd += QByteArray(COMMAND_SET_FITNESS_GOAL_END, 2);
+    QByteArray cmd = UCHARARR_TO_BYTEARRAY(COMMAND_SET_FITNESS_GOAL_START);
+    cmd += TypeConversion::fromInt16(goal);
+    cmd += UCHARARR_TO_BYTEARRAY(COMMAND_SET_FITNESS_GOAL_END);
 
     writeValue(UUID_CHARACTERISTIC_MIBAND_USER_SETTINGS, cmd);
 }
@@ -413,7 +411,7 @@ void MiBandService::setAlertFitnessGoal()
             ? COMMAND_ENABLE_GOAL_NOTIFICATION
             : COMMAND_DISABLE_GOAL_NOTIFICATION;
 
-    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(value, 4));
+    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(value));
 }
 
 
@@ -423,7 +421,7 @@ void MiBandService::setEnableDisplayOnLiftWrist()
             ? COMMAND_ENABLE_DISPLAY_ON_LIFT_WRIST
             : COMMAND_DISABLE_DISPLAY_ON_LIFT_WRIST;
 
-    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(value, 4));
+    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(value));
 }
 
 void MiBandService::setDisplayItems()
@@ -469,7 +467,7 @@ void MiBandService::setDisplayItems()
     auto sw = config->deviceDisplayWeatherShortcut();
     auto sa = config->deviceDisplayAliPayShortcut();
 
-    QByteArray cmd = QByteArray(COMMAND_CHANGE_SCREENS, 12);
+    QByteArray cmd = UCHARARR_TO_BYTEARRAY(COMMAND_CHANGE_SCREENS);
     cmd[1] = items1;
     cmd[2] = items2;
 
@@ -502,12 +500,12 @@ void MiBandService::setRotateWristToSwitchInfo(bool enable)
             ? COMMAND_ENABLE_ROTATE_WRIST_TO_SWITCH_INFO
             : COMMAND_DISABLE_ROTATE_WRIST_TO_SWITCH_INFO;
 
-    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(value, 4));
+    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(value));
 }
 
 void MiBandService::setDisplayCaller()
 {
-    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(COMMAND_ENABLE_DISPLAY_CALLER, 5));
+    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(COMMAND_ENABLE_DISPLAY_CALLER));
 }
 
 void MiBandService::setInactivityWarnings()
@@ -537,7 +535,14 @@ void MiBandService::fetchActivityData()
 {
     if (!m_activityFetchOperation && m_operationRunning == 0) {
         m_operationRunning = 2;
-        m_activityFetchOperation = new ActivityFetchOperation(this, m_conn);
+        int sampleSize = 4;
+        BipDevice *device = qobject_cast<BipDevice*>(parent());
+
+        if (device) {
+            sampleSize = device->activitySampleSize();
+        }
+
+        m_activityFetchOperation = new ActivityFetchOperation(this, m_conn, sampleSize);
         m_activityFetchOperation->start();
         emit operationRunningChanged();
         m_operationTimeout->start(10000);
@@ -569,7 +574,7 @@ void MiBandService::setAlarms()
     auto config = AmazfishConfig::instance();
     for (int i = 0, n = 1; i < 5; ++i, ++n) {
         int base       = config->alarmEnabled(n)    ? 128 : 0;
-        int repeatMask = config->alarmRepeatMask(n) ? 128 : 0;
+        int repeatMask = config->alarmRepeatMask(n) == 0 ? 128 : config->alarmRepeatMask(n);
 
         QByteArray cmd;
         cmd += 0x02;
@@ -593,7 +598,7 @@ void MiBandService::setDisconnectNotification()
             ? COMMAND_ENABLE_DISCONNECT_NOTIFICATION
             : COMMAND_DISABLE_DISCONNECT_NOTIFICATION;
 
-    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, QByteArray(value, 8));
+    writeValue(UUID_CHARACTERISTIC_MIBAND_CONFIGURATION, UCHARARR_TO_BYTEARRAY(value));
 }
 
 bool MiBandService::operationRunning()
@@ -625,11 +630,9 @@ void MiBandService::abortOperations()
     m_operationTimeout->stop();
 }
 
-void MiBandService::sendWeather(const CurrentWeather *weather)
+void MiBandService::sendWeather(const CurrentWeather *weather, bool supportsConditionString)
 {
     BipDevice *device = qobject_cast<BipDevice*>(parent());
-
-    bool supportsConditionString = false;
 
     if (!device || device->softwareRevision() > "V0.0.8.74") { //Lexical string comparison should be fine here
         message(tr("Firmware supports weather condition string"));
@@ -719,6 +722,13 @@ void MiBandService::sendWeather(const CurrentWeather *weather)
         }
     }
     writeChunked(UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER, 1, buf);
+
+    //Send forecast location
+    QByteArray location;
+    location += (char)(0x08);
+    location += weather->city()->name().toLocal8Bit();
+    location += (char)(0x00);
+    writeChunked(UUID_CHARACTERISTIC_MIBAND_CHUNKED_TRANSFER, 1, location);
 }
 
 void MiBandService::writeChunked(const QString &characteristic, int type, const QByteArray &value) {

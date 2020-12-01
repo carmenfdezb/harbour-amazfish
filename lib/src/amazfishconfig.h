@@ -5,7 +5,11 @@
 #include <QVariant>
 #include <QDate>
 
+#ifdef MER_EDITION_SAILFISH
 class MDConfGroup;
+#else
+#include <QSettings>
+#endif
 class QQmlEngine;
 class QJSEngine;
 
@@ -166,7 +170,11 @@ private:
 
     void setValue(const QString &key, const QVariant &value, signal_ptr signal);
 
+#ifdef MER_EDITION_SAILFISH
     MDConfGroup *m_group;
+#else
+    QSettings m_settings;
+#endif
 };
 
 #undef ALARM_OPTION
