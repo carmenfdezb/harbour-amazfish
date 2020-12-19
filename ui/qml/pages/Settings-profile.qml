@@ -61,12 +61,8 @@ PagePL {
             label: qsTr("Gender")
 
             model: ListModel {
-                ListElement {
-                    text: qsTr("Male")
-                }
-                ListElement {
-                    text: qsTr("Female")
-                }
+                ListElement { itemText: qsTr("Male") }
+                ListElement { itemText: qsTr("Female")}
             }
         }
         SliderPL {
@@ -96,12 +92,8 @@ PagePL {
             label: qsTr("Wear Location")
 
             model: ListModel {
-                ListElement {
-                    text: qsTr("Left")
-                }
-                ListElement {
-                    text: qsTr("Right")
-                }
+                ListElement { itemText: qsTr("Left") }
+                ListElement { itemText: qsTr("Right")}
             }
         }
 
@@ -154,6 +146,21 @@ PagePL {
                 saveProfile();
             }
         }
+        Timer {
+            //Allow data to sync
+            id: tmrSetDelay
+            repeat: false
+            interval: 500
+            running: false
+            onTriggered: {
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_PROFILE);
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_GOAL);
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_ALERT_GOAL);
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_DISPLAY_ON_LIFT);
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_ALL_DAY_HRM);
+                DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_HRM_SLEEP_DETECTION)
+            }
+        }
     }
 
     Component.onCompleted: {
@@ -183,21 +190,5 @@ PagePL {
         AmazfishConfig.profileHRMSleepSupport = swHRMSleepSupport.checked;
 
         tmrSetDelay.start();
-    }
-
-    Timer {
-        //Allow data to sync
-        id: tmrSetDelay
-        repeat: false
-        interval: 500
-        running: false
-        onTriggered: {
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_PROFILE);
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_GOAL);
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_ALERT_GOAL);
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_DISPLAY_ON_LIFT);
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_ALL_DAY_HRM);
-            DaemonInterfaceInstance.applyDeviceSetting(DaemonInterface.SETTING_USER_HRM_SLEEP_DETECTION)
-        }
     }
 }

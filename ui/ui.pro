@@ -85,6 +85,7 @@ DISTFILES += qml/harbour-amazfish.qml \
     qml/components/platform.silica/ToolItemPL.qml \
     qml/components/platform.silica/ValueButtonPL.qml \
     qml/cover/CoverPage.qml \
+    qml/pages/AddCityPage.qml \
     qml/pages/FirstPage.qml \
     qml/pages/HeartratePage.qml \
     qml/pages/PairSelectDeviceType.qml \
@@ -130,7 +131,6 @@ DISTFILES += qml/harbour-amazfish.qml \
     rpm/harbour-amazfish.changes.in \
     rpm/harbour-amazfish.changes.run.in \
     rpm/harbour-amazfish.spec \
-    rpm/harbour-amazfish.yaml \
     translations/*.ts \
     qml/pages/PairPage.qml \
     qml/pages/DebugInfo.qml \
@@ -148,7 +148,6 @@ DISTFILES += qml/harbour-amazfish.qml \
     qml/pages/Settings-alarms.qml \
     qml/pages/BipFirmwarePage.qml \
     qml/pages/SportsSummaryPage.qml \
-    qml/pages/AddCityDialog.qml \
     qml/pages/AnalysisPage.qml \
     qml/pages/StepsPage.qml \
     qml/pages/SleepPage.qml \
@@ -185,10 +184,10 @@ equals(FLAVOR, "silica") {
     CONFIG += flavor_kirigami
 } else:equals(FLAVOR, "qtcontrols") {
     CONFIG += flavor_qtcontrols
-} else:equals(FLAVOR, "ubports") {
-    CONFIG += flavor_ubports
+} else:equals(FLAVOR, "uuitk") {
+    CONFIG += flavor_uuitk
 } else {
-    error("Please specify platform using FLAVOR=platform as qmake option. Supported platforms: kirigami, silica, qtcontrols, ubports.")
+    error("Please specify platform using FLAVOR=platform as qmake option. Supported platforms: kirigami, silica, qtcontrols, uuitk.")
 }
 
 flavor_silica {
@@ -201,7 +200,7 @@ flavor_silica {
 isEmpty(PREFIX) {
     flavor_silica {
         PREFIX = /usr
-    } else:flavor_ubports {
+    } else:flavor_uuitk {
         PREFIX = /
     } else {
         PREFIX = /usr/local
@@ -210,7 +209,7 @@ isEmpty(PREFIX) {
 
 # PREFIX_RUNNING
 isEmpty(PREFIX_RUNNING) {
-    flavor_ubports {
+    flavor_uuitk {
         PREFIX_RUNNING = .
     } else {
         PREFIX_RUNNING = $$PREFIX
@@ -231,7 +230,7 @@ js.path = $$DATADIR/qml/tools
 icons.files = qml/pics/*.png qml/pics/devices  qml/custom-icons
 icons.path = $$DATADIR/qml/pics
 
-qmlplatform.extra = mkdir -p ${INSTALL_ROOT}$$DATADIR/qml/components/platform && cp -L -v $$PWD/qml/components/platform.$$FLAVOR/*.qml -t ${INSTALL_ROOT}$$DATADIR/qml/components/platform
+qmlplatform.extra = mkdir -p ${INSTALL_ROOT}$$DATADIR/qml/components/platform && cp -L -v $$PWD/qml/components/platform.$$FLAVOR/*.qml ${INSTALL_ROOT}$$DATADIR/qml/components/platform
 qmlplatform.path = $$DATADIR/qml/platform
 
 INSTALLS += qmlplatform qml js icons

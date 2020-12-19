@@ -167,6 +167,11 @@ QDateTime BipActivityDetailParser::makeAbsolute(long timeOffsetSeconds)
     return m_baseDate.addSecs(timeOffsetSeconds);
 }
 
+/** @brief Adds a point to the GPS track
+ *  Buffers incoming data in a temporary list if the timestamp is the same as the last point
+ *  When the time changes, calculates the duration of the time difference, and interpolates this
+ *  across the points in the list.
+ */
 void BipActivityDetailParser::add(const ActivityCoordinate &ap)
 {
     if (ap != m_lastActivityPoint) {
