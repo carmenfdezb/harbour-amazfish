@@ -43,6 +43,7 @@ protected:
     virtual void determineFirmwareVersion() = 0;
 
     void calculateCRC16();
+
     void calculateCRC32();
 
 };

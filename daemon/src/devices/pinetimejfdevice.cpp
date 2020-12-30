@@ -3,6 +3,9 @@
 #include "currenttimeservice.h"
 #include "alertnotificationservice.h"
 #include "pinetimemusicservice.h"
+#include "infinitimefirmwareinfo.h"
+#include "dfuservice.h"
+#include "dfuoperation.h"
 
 #include <QtXml/QtXml>
 
@@ -41,6 +44,15 @@ QString PinetimeJFDevice::deviceType()
 bool PinetimeJFDevice::operationRunning()
 {
     return QBLEDevice::operationRunning();
+}
+
+void PinetimeJFDevice::abortOperations()
+{
+    qDebug() << Q_FUNC_INFO;
+    DfuService *fw = qobject_cast<DfuService*>(service(DfuService::UUID_SERVICE_DFU));
+    if (fw){
+        fw->abortOperations();
+    }
 }
 
 void PinetimeJFDevice::sendAlert(const QString &sender, const QString &subject, const QString &message)
@@ -96,6 +108,8 @@ void PinetimeJFDevice::parseServices()
                 addService(AlertNotificationService::UUID_SERVICE_ALERT_NOTIFICATION, new AlertNotificationService(path, this));
             } else if (uuid == PineTimeMusicService::UUID_SERVICE_MUSIC  && !service(PineTimeMusicService::UUID_SERVICE_MUSIC  )) {
                 addService(PineTimeMusicService::UUID_SERVICE_MUSIC  , new PineTimeMusicService(path, this));
+            } else if (uuid == DfuService::UUID_SERVICE_DFU && !service(DfuService::UUID_SERVICE_DFU)) {
+                addService(DfuService::UUID_SERVICE_DFU, new DfuService(path, this));
             } else if ( !service(uuid)) {
                 addService(uuid, new QBLEService(uuid, path, this));
             }
@@ -124,6 +138,13 @@ void PinetimeJFDevice::initialise()
     if (ms) {
         ms->enableNotification(PineTimeMusicService::UUID_CHARACTERISTIC_MUSIC_EVENT);
         connect(ms, &PineTimeMusicService::serviceEvent, this, &PinetimeJFDevice::serviceEvent, Qt::UniqueConnection);
+    }
+
+    DfuService *fw = qobject_cast<DfuService*>(service(DfuService::UUID_SERVICE_DFU));
+    if (fw) {
+        connect(fw, &DfuService::message, this, &PinetimeJFDevice::message, Qt::UniqueConnection);
+        connect(fw, &DfuService::downloadProgress, this, &PinetimeJFDevice::downloadProgress, Qt::UniqueConnection);
+        connect(fw, &QBLEService::operationRunningChanged, this, &QBLEDevice::operationRunningChanged, Qt::UniqueConnection);
     }
 }
 
@@ -163,8 +184,7 @@ void PinetimeJFDevice::authenticated(bool ready)
 
 AbstractFirmwareInfo *PinetimeJFDevice::firmwareInfo(const QByteArray &bytes)
 {
-    Q_UNUSED(bytes);
-    return nullptr;
+    return new InfinitimeFirmwareInfo(bytes);
 }
 
 void PinetimeJFDevice::setMusicStatus(bool playing, const QString &title, const QString &artist, const QString &album, int duration, int position)
@@ -175,6 +195,23 @@ void PinetimeJFDevice::setMusicStatus(bool playing, const QString &title, const 
         music->setAlbum(album);
         music->setTrack(title);
         music->setArtist(artist);
+    }
+}
+
+void PinetimeJFDevice::prepareFirmwareDownload(const AbstractFirmwareInfo *info)
+{
+    DfuService *fw = qobject_cast<DfuService*>(service(DfuService::UUID_SERVICE_DFU));
+    if (fw){
+        fw->prepareFirmwareDownload(info, new DfuOperation(info, fw));
+    }
+}
+
+void PinetimeJFDevice::startDownload()
+{
+    qDebug() << Q_FUNC_INFO;
+    DfuService *fw = qobject_cast<DfuService*>(service(DfuService::UUID_SERVICE_DFU));
+    if (fw){
+        fw->startDownload();
     }
 }
 
